@@ -60,10 +60,18 @@ const GeneralView = () => {
             <NavigationBar 
                 movements={ movements }
             />
-            <UserCrudIndex />
-            <ModelCrudIndex />
-            <RenderCrudIndex />
-            <RenderWebsocketIndex />
+            <UserCrudIndex 
+                movements={ movements }
+            />
+            <ModelCrudIndex 
+                movements={ movements }
+            />
+            <RenderCrudIndex 
+                movements={ movements }
+            />
+            <RenderWebsocketIndex 
+                movements={ movements }
+            />
         </>
     )
 }
