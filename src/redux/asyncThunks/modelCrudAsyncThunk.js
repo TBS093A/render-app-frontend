@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import abstractService from './abstractService'
 
-let endpoint = '/model'
+let endpoint = '/model/'
 
 
 const fetchGetAllModels = createAsyncThunk(
@@ -47,6 +47,7 @@ const fetchUploadModel = createAsyncThunk(
     ) => {
         let formData = FormData()
         formData.append("blend", body.file)
+        body.file = formData
         return await abstractService._post(
             trueEndpoint, 
             body,
@@ -56,6 +57,7 @@ const fetchUploadModel = createAsyncThunk(
 )
 
 export default {
-  fetchGetAllModels,
-  fetchGetOneModelAndDownload,
+    fetchGetAllModels,
+    fetchGetOneModelAndDownload,
+    fetchUploadModel
 }
