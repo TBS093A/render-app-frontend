@@ -15,11 +15,15 @@ const userAuthSlice = createSlice(
         reducers: {},
         extraReducers: {
             [userAuthAsyncThunk.fetchLogin.fulfilled.type]: (state, action) => {
-                state.token = action.payload.data.Authorization
-                state.user.id = action.payload.data.user.id
-                state.user.username = action.payload.data.user.username
-                state.user.email = action.payload.data.user.email
-                state.info = 'login success'
+                try {
+                    state.token = action.payload.data.Authorization
+                    state.user.id = action.payload.data.user.id
+                    state.user.username = action.payload.data.user.username
+                    state.user.email = action.payload.data.user.email
+                    state.info = 'login success'
+                } catch {
+                    state.info = 'login failed'
+                }
             },
             [userAuthAsyncThunk.fetchLogout.fulfilled.type]: (state, action) => {
                 state.token = ''
