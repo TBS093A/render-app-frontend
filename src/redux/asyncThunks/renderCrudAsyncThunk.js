@@ -5,7 +5,7 @@ let endpoint = '/render/'
 
 
 const fetchGetAllRenders = createAsyncThunk(
-    'model/fetchGetAllModels',
+    'render/fetchGetAllRenders',
     async (
         token,
         thunkAPI
@@ -20,7 +20,7 @@ const fetchGetAllRenders = createAsyncThunk(
  *      param id: render id
  */
 const fetchGetOneRenderAndDownload = createAsyncThunk(
-    'model/fetchGetAllModels',
+    'render/fetchGetOneRenderAndDownload',
     async (
         body,
         thunkAPI

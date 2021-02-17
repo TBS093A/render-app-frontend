@@ -20,7 +20,7 @@ const fetchGetAllModels = createAsyncThunk(
  *      param id: model id
  */
 const fetchGetOneModelAndDownload = createAsyncThunk(
-    'model/fetchGetAllModels',
+    'model/fetchGetOneModelAndDownload',
     async (
         body,
         thunkAPI
@@ -40,7 +40,7 @@ const fetchGetOneModelAndDownload = createAsyncThunk(
  *      param user_id: user id
  */
 const fetchUploadModel = createAsyncThunk(
-    'model/fetchGetAllModels',
+    'model/fetchUploadModel',
     async (
         body,
         thunkAPI
