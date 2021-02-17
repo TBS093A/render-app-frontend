@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import abstractService from './abstractService'
+import abstractService from './abstracts/abstractService'
 
 let endpoint = '/user/'
 

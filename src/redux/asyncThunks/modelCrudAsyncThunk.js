@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import abstractService from './abstractService'
+import abstractService from './abstracts/abstractService'
 
 let endpoint = '/model/'
 
@@ -26,7 +26,7 @@ const fetchGetOneModelAndDownload = createAsyncThunk(
         thunkAPI
     ) => {
         return await abstractService._getOne(
-            trueEndpoint, 
+            endpoint, 
             body.id, 
             body.token
         )
@@ -49,7 +49,7 @@ const fetchUploadModel = createAsyncThunk(
         formData.append("blend", body.file)
         body.file = formData
         return await abstractService._post(
-            trueEndpoint, 
+            endpoint, 
             body,
             body.token
         )

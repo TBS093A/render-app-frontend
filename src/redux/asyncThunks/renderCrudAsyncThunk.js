@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import abstractService from './abstractService'
+import abstractService from './abstracts/abstractService'
 
 let endpoint = '/render/'
 
@@ -26,7 +26,7 @@ const fetchGetOneRenderAndDownload = createAsyncThunk(
         thunkAPI
     ) => {
         return await abstractService._getOne(
-            trueEndpoint, 
+            endpoint, 
             body.id, 
             body.token
         )

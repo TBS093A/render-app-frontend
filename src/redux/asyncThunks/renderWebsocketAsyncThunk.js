@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import GeneralAddress from './abstractAddress'
+import GeneralAddress from './abstracts/abstractAddress'
 
 let endpoint_single_image = '/render/single/image/'
 let endpoint_single_set = '/render/single/set/'
@@ -109,5 +109,5 @@ const fetchDisconnect = createAsyncThunk(
 export default {
     fetchConnect,
     fetchSaveMessage,
-    fetchDisconnect,
+    fetchDisconnect
 }
