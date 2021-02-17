@@ -10,7 +10,8 @@ const userAuthSlice = createSlice(
                 id: 0,
                 username: '',
                 email: ''
-            }
+            },
+            info: ''
         },
         reducers: {},
         extraReducers: {

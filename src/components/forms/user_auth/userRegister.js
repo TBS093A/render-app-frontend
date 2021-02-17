@@ -15,6 +15,7 @@ const UserRegisterForm = () => {
     const emailInput = React.createRef()
 
     const dispatch = useDispatch()
+    const { info } = useSelector( userCrudSelector )
 
     let refList = [
         usernameInput,
@@ -27,7 +28,7 @@ const UserRegisterForm = () => {
             type: 'info',
             action: 'Create',
             endpint: 'user/auth/login',
-            button_value: 'Sign In'
+            button_value: 'Sign Up'
         },
         {
             type: 'text',
@@ -66,6 +67,7 @@ const UserRegisterForm = () => {
                 refList={ refList }
                 action={ register }
             />
+            { info }
         </>
     )
 

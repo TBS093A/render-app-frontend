@@ -14,6 +14,7 @@ const UserLoginForm = () => {
     const passwordInput = React.createRef()
 
     const dispatch = useDispatch()
+    const { info } = useSelector( userAuthSelector )
 
     let refList = [
         usernameInput,
@@ -58,6 +59,7 @@ const UserLoginForm = () => {
                 refList={ refList }
                 action={ login }
             />
+            { info }
         </>
     )
 
