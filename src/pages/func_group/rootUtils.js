@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
+
 import { userAuthSelector } from '../../redux/slices/userAuthSlice'
 
 import UserAuthIndex from './user_auth/userAuthIndex'
@@ -8,18 +9,57 @@ import ModelCrudIndex from './model_crud/modelCrudIndex'
 import RenderCrudIndex from './render_crud/renderCrudIndex'
 import RenderWebsocketIndex from './render_websocket/renderWebsocketIndex'
 
+import NavigationBar from './navigationBar'
+
 
 const GeneralView = () => {
 
-    const [userAuthView, setUserAuthView] = useState(true)
-    const [userCrudView, setUserCrudView] = useState(false)
-    const [modelCrudView, setModelCrudView] = useState(false)
-    const [renderCrudView, setRenderCrudView] = useState(false)
-    const [renderWebsocketView, setRenderWebsocketView] = useState(false)
+    const [userCrudView, setUserCrudView] = useState(
+        {
+            update_user: false,
+            delete_user: false
+        }
+    )
+    const [modelCrudView, setModelCrudView] = useState(
+        {
+            get_all_models: false,
+            get_one_model_and_download: false,
+            upload_model: false
+        }
+    )
+    const [renderCrudView, setRenderCrudView] = useState(
+        {
+            show_ready_renders_and_download: false,
+            render_functionality: {
+                render_single_image: false,
+                render_single_set: false,
+                render_all: false,
+                render_image_by_vector: false,
+                render_set_by_vector: false
+            }
+        }
+    )
+
+    let movements = {
+        user_view: {
+            userCrudView: userCrudView,
+            setUserCrudView: setUserCrudView
+        },
+        model_view: {
+            modelCrudView: modelCrudView,
+            setModelCrudView: setModelCrudView
+        },
+        render_view: {
+            renderView: renderCrudView, 
+            setRenderView: setRenderCrudView
+        }
+    }
 
     return (
         <>
-            <UserAuthIndex />
+            <NavigationBar 
+                movements={ movements }
+            />
             <UserCrudIndex />
             <ModelCrudIndex />
             <RenderCrudIndex />
@@ -29,9 +69,9 @@ const GeneralView = () => {
 }
 
 const __verifyUserSession = (token, user)  => {
-    
-    if ( user.id > 0 && user.username !== '' && user.email !== '' && token !== '')
-        return false
+
+    if ( user.id !== 0 && user.username !== '' && user.email !== '' && token !== '' )
+        return true
     else
         return true
     
@@ -45,8 +85,8 @@ const VerifyUserSession = () => {
         <>
             {
                 __verifyUserSession(token, user) 
-                ? <GeneralView />
-                : <UserAuthIndex />  
+                ? <GeneralView />  
+                : <UserAuthIndex /> 
             }
         </>
     )
