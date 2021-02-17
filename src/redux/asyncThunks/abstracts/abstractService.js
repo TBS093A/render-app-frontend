@@ -73,13 +73,13 @@ const responseAbstract = async (endpoint, method, token, body) => {
 }
 
 const headerBuilder = (url, method, token, body) => {
-    headers = {
+    let headers_r = {
         'Authorization': token,
         'accept': 'application/json',
         'Content-Type': 'application/json',
     }
     if ('file' in body) {
-        headers = {
+        headers_r = {
             'Authorization': token,
             'accept': 'multipart/form-data',
             'Content-Type': 'multipart/form-data',
@@ -88,7 +88,7 @@ const headerBuilder = (url, method, token, body) => {
     let headers = {
         url: url,
         method: method,
-        headers: headers
+        headers: headers_r
     }
     if (method === 'PUT' || method === 'POST' || method === 'PATCH') {
         headers = Object.assign({}, headers, {
