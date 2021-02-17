@@ -45,14 +45,26 @@ const __make_address = async (endpoint) => {
     return GeneralAddress + endpoint
 }
 
+/**
+ *  @param body:
+ *      param token: token
+ *      param endpoint:
+ *          examples:
+ *          'image' - connect to single image ws renderer 
+ *          'set' - connect to single set ws renderer
+ *          'all' - connect to all ws renderer
+ * 
+ *          'vector/image' - connect to vector single image ws renderer
+ *          'vector/set' - connerct to vector single set ws renderer
+ */
 const fetchConnect = createAsyncThunk(
     'render/async/fetchConnect',
     async (
-        endpoint,
+        body,
         thunkAPI
     ) => {
         let uuid = __uuidv4()
-        let address = __make_address(endpoint)
+        let address = __make_address(body.endpoint)
         return {
             web_socket: new WebSocket(address + uuid),
             address: address,
@@ -61,21 +73,31 @@ const fetchConnect = createAsyncThunk(
     }
 )
 
+/**
+ *  @param body:
+ *      param token: token
+ *      param message: message string
+ */
 const fetchSaveMessage = createAsyncThunk(
     'render/async/fetchSaveMessage',
     async (
-        message,
+        body,
         thunkAPI
     ) => {
         return {
-            message: message
+            message: body.message
         }
     }
 )
 
+/**
+ *  @param body:
+ *      param token: token
+ */
 const fetchDisconnect = createAsyncThunk(
     'render/async/fetchDisconnect',
     async (
+        token,
         thunkAPI
     ) => {
         return {
