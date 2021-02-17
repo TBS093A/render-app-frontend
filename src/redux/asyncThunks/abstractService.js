@@ -3,7 +3,7 @@ import { GeneralAddress } from './abstractAddress'
 
 const APIAddress = 'http://' + GeneralAddress
 
-let defaultBody = ''
+let defaultBody = {}
 
 const _getList = async (endpoint, token) => {
   return await responseAbstract(

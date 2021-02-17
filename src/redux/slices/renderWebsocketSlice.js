@@ -37,6 +37,6 @@ const renderWebsocketSlice = createSlice(
     }
 )
 
-export const userAuthReducer = userAuthSlice.reducer
+export const renderWebsocketReducer = renderWebsocketSlice.reducer
 
-export const userAuthSelector = state => state.userAuthReducer
+export const renderWebsocketSelector = state => state.renderWebsocketReducer
