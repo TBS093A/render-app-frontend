@@ -7,6 +7,65 @@ import { userCrudSelector } from '../../redux/slices/userCrudSlice'
 import userCrudAsyncThunk from '../../redux/asyncThunks/userCrudAsyncThunk'
 
 
+const __setShowGeneral = ( view, key, movements ) => {
+
+    movements.user_view.setUserCrudView( 
+        {
+            update_user: false,
+            delete_user: false
+        }
+    )
+
+    movements.model_view.setModelCrudView( 
+        {
+            get_all_models: true,
+            get_one_model_and_download: false,
+            upload_model: false
+        }
+    )
+
+    movements.render_view.setRenderView( 
+        {
+            show_ready_renders_and_download: false,
+            render_functionality: {
+                render_single_image: false,
+                render_single_set: false,
+                render_all: false,
+                render_image_by_vector: false,
+                render_set_by_vector: false
+            }
+        }
+    )
+
+    if (view === 'user_view') {
+        let new_move = movements.user_view.userCrudView
+        new_move[key] = true
+        movements.user_view.setUserCrudView( 
+            new_move
+        )
+    } else if (view === 'model_view') {
+        let new_move = movements.user_view.modelCrudView
+        new_move[key] = true
+        movements.model_view.setModelCrudView( 
+            new_move
+        )
+    } else if (view === 'render_view') {
+        let new_move = movements.render_view.renderView
+        if ( key in new_move ) {
+            new_move[key] = true
+            movements.model_view.setModelCrudView( 
+                new_move
+            )
+        } else {
+            new_move['render_functionality'][key] = true
+            movements.model_view.setModelCrudView( 
+                new_move
+            )
+        }
+    }
+    
+}
+
 const __styleChanger = ( bool ) => {
     
     let display = {
@@ -57,29 +116,17 @@ const NavigationBar = ({ movements }) => {
                             │   ├── User info
                             <div>
                                 <div>
-                                    │   │   ├── { user_get.username } 
+                                    │   │   ├── Username: { user_get.username } 
                                 </div>
                                 <div>
-                                    │   │   └── { user_get.email }
+                                    │   │   └── E-mail: { user_get.email }
                                 </div>
                             </div>
                         </div>
-                        <div onClick={ () => movements.user_view.setUserCrudView( 
-                                {
-                                    update_user: true,
-                                    delete_user: false
-                                }
-                            )
-                        }>
+                        <div onClick={ () => __setShowGeneral( 'user_view', 'update_user', movements ) }>
                             │   ├── Update User
                         </div>
-                        <div onClick={ () => movements.user_view.setUserCrudView( 
-                                {
-                                    update_user: false,
-                                    delete_user: true
-                                }
-                            )
-                        }>
+                        <div onClick={ () => __setShowGeneral( 'user_view', 'delete_user', movements ) }>
                             │   └── Delete User
                         </div>
                     </div>
@@ -89,34 +136,13 @@ const NavigationBar = ({ movements }) => {
                     ├── Models
                     </div>
                     <div style={ __styleChanger( showModels ) }>
-                        <div onClick={ () => movements.model_view.setModelCrudView( 
-                                {
-                                    get_all_models: true,
-                                    get_one_model_and_download: false,
-                                    upload_model: false
-                                }
-                            )
-                        }>
+                        <div onClick={ () => __setShowGeneral( 'model_view', 'get_all_models', movements ) }>
                             │   ├── Get All Models
                         </div>
-                        <div onClick={ () => movements.model_view.setModelCrudView( 
-                                {
-                                    get_all_models: false,
-                                    get_one_model_and_download: true,
-                                    upload_model: false
-                                }
-                            )
-                        }>
+                        <div onClick={ () => __setShowGeneral( 'model_view', 'get_one_model_and_download', movements )}>
                             │   ├── Get One Model & Download
                         </div>
-                        <div onClick={ () => movements.model_view.setModelCrudView( 
-                                {
-                                    get_all_models: false,
-                                    get_one_model_and_download: false,
-                                    upload_model: true
-                                }
-                            )
-                        }>
+                        <div onClick={ () => __setShowGeneral( 'model_view', 'upload_model', movements ) }>
                             │   └── Upload Model
                         </div>
                     </div>
@@ -126,19 +152,7 @@ const NavigationBar = ({ movements }) => {
                     ├── Render
                     </div>
                     <div style={ __styleChanger( showRender ) }>
-                        <div onClick={ () => movements.model_view.setModelCrudView( 
-                                {
-                                    show_ready_renders_and_download: true,
-                                    render_functionality: {
-                                        render_single_image: false,
-                                        render_single_set: false,
-                                        render_all: false,
-                                        render_image_by_vector: false,
-                                        render_set_by_vector: false
-                                    }
-                                }
-                            )
-                        }>
+                        <div onClick={ () => __setShowGeneral( 'render_view', 'show_ready_renders_and_download', movements ) }>
                             │   ├── Show Ready Renders & Download
                         </div>
                         <div>
@@ -146,79 +160,19 @@ const NavigationBar = ({ movements }) => {
                             │   ├── Render Functionality
                             </div>
                             <div style={ __styleChanger( showRenderFunc ) }>
-                                <div onClick={ () => movements.model_view.setModelCrudView( 
-                                        {
-                                            show_ready_renders_and_download: false,
-                                            render_functionality: {
-                                                render_single_image: true,
-                                                render_single_set: false,
-                                                render_all: false,
-                                                render_image_by_vector: false,
-                                                render_set_by_vector: false
-                                            }
-                                        }
-                                    )
-                                }>
+                                <div onClick={ () => __setShowGeneral( 'render_view', 'render_single_image', movements ) }>
                                     │   │   ├── Render Single Image
                                 </div>
-                                <div onClick={ () => movements.model_view.setModelCrudView( 
-                                        {
-                                            show_ready_renders_and_download: false,
-                                            render_functionality: {
-                                                render_single_image: false,
-                                                render_single_set: true,
-                                                render_all: false,
-                                                render_image_by_vector: false,
-                                                render_set_by_vector: false
-                                            }
-                                        }
-                                    )
-                                }>
+                                <div onClick={ () => __setShowGeneral( 'render_view', 'render_single_set', movements ) }>
                                     │   │   ├── Render Single Set
                                 </div>
-                                <div onClick={ () => movements.model_view.setModelCrudView( 
-                                        {
-                                            show_ready_renders_and_download: false,
-                                            render_functionality: {
-                                                render_single_image: false,
-                                                render_single_set: false,
-                                                render_all: true,
-                                                render_image_by_vector: false,
-                                                render_set_by_vector: false
-                                            }
-                                        }
-                                    )
-                                }>
+                                <div onClick={ () => __setShowGeneral( 'render_view', 'render_all', movements ) }>
                                     │   │   ├── Render All Sets
                                 </div>
-                                <div onClick={ () => movements.model_view.setModelCrudView( 
-                                        {
-                                            show_ready_renders_and_download: false,
-                                            render_functionality: {
-                                                render_single_image: false,
-                                                render_single_set: false,
-                                                render_all: false,
-                                                render_image_by_vector: true,
-                                                render_set_by_vector: false
-                                            }
-                                        }
-                                    )
-                                }>
+                                <div onClick={ () => __setShowGeneral( 'render_view', 'render_image_by_vector', movements ) }>
                                     │   │   ├── Render Image By Vector
                                 </div>
-                                <div onClick={ () => movements.model_view.setModelCrudView( 
-                                        {
-                                            show_ready_renders_and_download: false,
-                                            render_functionality: {
-                                                render_single_image: false,
-                                                render_single_set: false,
-                                                render_all: false,
-                                                render_image_by_vector: false,
-                                                render_set_by_vector: true
-                                            }
-                                        }
-                                    )
-                                }>
+                                <div onClick={ () => __setShowGeneral( 'render_view', 'render_set_by_vector', movements ) }>
                                     │   │   └── Render Set By Vector
                                 </div>
                             </div>
