@@ -1,11 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import abstractService from './abstractService'
 
-let endpoint = '/model/'
+let endpoint = '/user/'
 
 
 const fetchGetAllUsers = createAsyncThunk(
-    'model/fetchGetAllModels',
+    'user/fetchGetAllUsers',
     async (
         token,
         thunkAPI
@@ -24,7 +24,7 @@ const fetchGetAllUsers = createAsyncThunk(
  *      param email: email string
  */
 const fetchRegister = createAsyncThunk(
-    'model/fetchGetAllModels',
+    'user/fetchRegister',
     async (
         body,
         thunkAPI
