@@ -27,10 +27,10 @@ const renderWebsocketSlice = createSlice(
                 ]
             },
             [renderWebsocketAsyncThunk.fetchDisconnect.fulfilled.type]: (state, action) => {
-                state.web_socket = action.web_socket,
-                state.address = '',
-                state.room_uuid = '',
-                state.messages = [],
+                state.web_socket = action.web_socket
+                state.address = ''
+                state.room_uuid = ''
+                state.messages = []
                 state.connected = false
             }
         }
