@@ -5,6 +5,7 @@ import { userAuthSelector } from '../../redux/slices/userAuthSlice'
 import { userCrudSelector } from '../../redux/slices/userCrudSlice'
 
 import userCrudAsyncThunk from '../../redux/asyncThunks/userCrudAsyncThunk'
+import userAuthAsyncThunk from '../../redux/asyncThunks/userAuthAsyncThunk'
 
 
 const __setShowGeneral = ( view, key, movements ) => {
@@ -43,7 +44,7 @@ const __setShowGeneral = ( view, key, movements ) => {
             new_move
         )
     } else if (view === 'model_view') {
-        let new_move = movements.user_view.modelCrudView
+        let new_move = movements.model_view.modelCrudView
         new_move[key] = true
         movements.model_view.setModelCrudView( 
             new_move
@@ -86,7 +87,7 @@ const NavigationBar = ({ movements }) => {
     const dispatch = useDispatch()
 
     useEffect( () => {
-        if ( user_get !== {} && token !== '' && user.id > 0)
+        if ( user_get === {} && token !== '' && user.id > 0)
             dispatch(
                 userCrudAsyncThunk.fetchGetOneUser(
                     {
@@ -100,7 +101,15 @@ const NavigationBar = ({ movements }) => {
     const [showAccount, setShowAccount] = useState(false)
     const [showModels, setShowModels] = useState(false)
     const [showRender, setShowRender] = useState(false)
-    const [showRenderFunc, setShowRenderFunc] = useState(false)    
+    const [showRenderFunc, setShowRenderFunc] = useState(false)
+    
+    const logout = async () => {
+        dispatch(
+            userAuthAsyncThunk.fetchLogout(
+                token
+            )
+        )
+    }
 
     return(
         <>
@@ -175,8 +184,8 @@ const NavigationBar = ({ movements }) => {
                         </div>
                     </div>
                 </div>
-                <div>
-                    └── Logout
+                <div onClick={ () => logout() }>
+                    └── Sign Out
                 </div>
             </div>
         </>

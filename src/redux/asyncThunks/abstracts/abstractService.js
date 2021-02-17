@@ -51,8 +51,11 @@ const _put = async (endpoint, objectId, body, token) => {
 }
 
 const _delete = async (endpoint, objectId, token) => {
+  let slash = '/'
+  if ( objectId === '' )
+    slash = ''
   return await responseAbstract(
-    endpoint + objectId + '/',
+    endpoint + objectId + slash,
     'DELETE',
     token,
     defaultBody
@@ -98,7 +101,6 @@ const headerBuilder = (url, method, token, body) => {
             data: JSON.stringify(body),
         })
     }
-    console.log(headers)
     return headers
 }
 
