@@ -1,7 +1,7 @@
 import axios from 'axios'
+import { GeneralAddress } from './abstractAddress'
 
-
-const APIAddress = 'http://localhost:9090'
+const APIAddress = 'http://' + GeneralAddress
 
 let defaultBody = ''
 
