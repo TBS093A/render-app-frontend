@@ -18,8 +18,7 @@ const __setShowGeneral = ( view, key, movements ) => {
 
     movements.model_view.setModelCrudView( 
         {
-            get_all_models: true,
-            get_one_model_and_download: false,
+            show_models_and_dwonload: false,
             upload_model: false
         }
     )
@@ -136,11 +135,8 @@ const NavigationBar = ({ movements }) => {
                     ├── Models
                     </div>
                     <div style={ __styleChanger( showModels ) }>
-                        <div onClick={ () => __setShowGeneral( 'model_view', 'get_all_models', movements ) }>
-                            │   ├── Get All Models
-                        </div>
-                        <div onClick={ () => __setShowGeneral( 'model_view', 'get_one_model_and_download', movements )}>
-                            │   ├── Get One Model & Download
+                        <div onClick={ () => __setShowGeneral( 'model_view', 'show_models_and_dwonload', movements )}>
+                            │   ├── Show Models & Download
                         </div>
                         <div onClick={ () => __setShowGeneral( 'model_view', 'upload_model', movements ) }>
                             │   └── Upload Model
