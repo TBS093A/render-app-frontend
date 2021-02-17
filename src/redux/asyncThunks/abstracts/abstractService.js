@@ -74,30 +74,52 @@ const responseAbstract = async (endpoint, method, token, body) => {
 
 const headerBuilder = (url, method, token, body) => {
     let headers_r = {
-        'Authorization': token,
+        'authorization': token,
+        'x-csrftoken': getCookie('csrftoken'),
         'accept': 'application/json',
-        'Content-Type': 'application/json',
+        'content-type': 'application/json',
     }
     if ('file' in body) {
         headers_r = {
-            'Authorization': token,
+            'authorization': token,
+            'x-csrftoken': getCookie('csrftoken'),
             'accept': 'multipart/form-data',
-            'Content-Type': 'multipart/form-data',
+            'content-type': 'multipart/form-data',
         }
     }
     let headers = {
         url: url,
         method: method,
-        headers: headers_r
+        headers: headers_r,
+        credentials: 'same-origin'
     }
     if (method === 'PUT' || method === 'POST' || method === 'PATCH') {
         headers = Object.assign({}, headers, {
             data: JSON.stringify(body),
-            withCredentials: true,
         })
     }
+    console.log(headers)
     return headers
 }
+
+/**
+ * get cookie method for CSRF verification
+ * @param {string} name - name of handled cookie
+ */
+const getCookie = (name) => {
+    if (!document.cookie) {
+        return null;
+    }
+    const token = document.cookie.split(';')
+        .map(c => c.trim())
+        .filter(c => c.startsWith(name + '='));
+
+    if (token.length === 0) {
+        return null;
+    }
+    return decodeURIComponent(token[0].split('=')[1]);
+}
+
 
 
 export default {

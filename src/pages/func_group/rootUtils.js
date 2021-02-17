@@ -80,7 +80,7 @@ const __verifyUserSession = (token, user)  => {
     if ( user.id !== 0 && user.username !== '' && user.email !== '' && token !== '' )
         return true
     else
-        return true
+        return false
     
 }
 
