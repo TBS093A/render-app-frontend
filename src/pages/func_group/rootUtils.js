@@ -22,8 +22,7 @@ const GeneralView = () => {
     )
     const [modelCrudView, setModelCrudView] = useState(
         {
-            get_all_models: false,
-            get_one_model_and_download: false,
+            show_models_and_dwonload: false,
             upload_model: false
         }
     )
