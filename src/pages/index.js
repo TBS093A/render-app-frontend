@@ -9,7 +9,7 @@ import Root from './func_group/root';
 // if you have problem with watchers - use it:
 // echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
-const Index = () => {
+const IndexPage = () => {
   return (
     <Provider store={store}>
       <Root />
@@ -17,4 +17,4 @@ const Index = () => {
   )
 }
 
-export default Index
+export default IndexPage

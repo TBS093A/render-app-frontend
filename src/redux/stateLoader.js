@@ -1,11 +1,8 @@
 export const loadState = () => {
     try {
-        const stateName = localStorage.getItem('user_key')
-        const serializedState = localStorage.getItem(stateName)
+        const serializedState = localStorage.getItem('state')
 
-        if (stateName === null) {
-            return {}
-        } else if (serializedState === null) {
+        if (serializedState === undefined || serializedState === null) {
             return {}
         } else {
             return JSON.parse(serializedState)
@@ -21,15 +18,12 @@ export const loadState = () => {
 export const saveState = (state) => {
     try {
 
-        const stateName = localStorage.getItem('user_key')
         const serializedState = JSON.stringify(state)
 
-        if (stateName === null) {
-            return undefined
-        } else if (serializedState === null) {
+        if (serializedState === null) {
             return undefined
         } else {
-            localStorage.setItem(stateName, serializedState)
+            localStorage.setItem('state', serializedState)
 
         }
     } catch (err) {
