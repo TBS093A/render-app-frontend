@@ -16,7 +16,7 @@ const _getList = async (endpoint, token) => {
 
 const _getOne = async (endpoint, objectId, token) => {
   return await responseAbstract(
-    endpoint + objectId,
+    endpoint + objectId + '/',
     'GET',
     token,
     defaultBody
@@ -34,7 +34,7 @@ const _post = async (endpoint, body, token) => {
 
 const _patch = async (endpoint, objectId, body, token) => {
   return await responseAbstract(
-    endpoint + objectId,
+    endpoint + objectId + '/',
     'PATCH',
     token,
     body
@@ -43,7 +43,7 @@ const _patch = async (endpoint, objectId, body, token) => {
 
 const _put = async (endpoint, objectId, body, token) => {
   return await responseAbstract(
-    endpoint + objectId,
+    endpoint + objectId + '/',
     'PUT',
     token,
     body
@@ -52,7 +52,7 @@ const _put = async (endpoint, objectId, body, token) => {
 
 const _delete = async (endpoint, objectId, token) => {
   return await responseAbstract(
-    endpoint + objectId,
+    endpoint + objectId + '/',
     'DELETE',
     token,
     defaultBody
