@@ -4,7 +4,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { userAuthSelector } from '../../../redux/slices/userAuthSlice'
 import { modelCrudSelector } from '../../../redux/slices/modelCrudSlice'
 import { renderWebsocketSelector } from '../../../redux/slices/renderWebsocketSlice'
-import renderWebsocketAsyncThunk from '../../../redux/asyncThunks/renderWebsocketAsyncThunk'
+
+import { connect, saveMessage, disconnect } from '../../../redux/slices/renderWebsocketSlice'
+
 import modelCrudAsyncThunk from '../../../redux/asyncThunks/modelCrudAsyncThunk'
 
 import FormGenerator from '../formGenerator'
@@ -137,16 +139,20 @@ const RenderSingleImageForm = () => {
             }
 
             if ( web_socket === null && address === '' && room_uuid === '') {
-                dispatch( renderWebsocketAsyncThunk.fetchConnect( 'image' ) )
+                connect( 
+                    {
+                        address: '/single/image/'
+                    } 
+                )
             }
 
-            if ( address !== '' ) {
-                web_socket.onmessage = (event) => {
-                    dispatch( 
-                        renderWebsocketAsyncThunk.fetchSaveMessage(
-                            JSON.parse( event.data )
-                        ) 
-                    )
+            if ( address !== '' && web_socket !== null ) {
+                web_socket.onmessage = (event) => { 
+                    saveMessage( 
+                        {
+                            message: JSON.parse( event.data ) 
+                        }
+                    ) 
                 }
             }
         

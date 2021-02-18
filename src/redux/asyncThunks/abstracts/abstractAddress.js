@@ -1,1 +1,3 @@
-export const GeneralAddress = 'http://localhost:9090'
+const API = 'localhost:9090'
+export const GeneralAddress = 'http://' + API
+export const GeneralAddressWS = 'ws://' + API
