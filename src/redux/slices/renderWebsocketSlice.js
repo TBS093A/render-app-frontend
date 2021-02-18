@@ -1,6 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
 import renderWebsocketAsyncThunk from '../asyncThunks/renderWebsocketAsyncThunk'
 
+import GeneralAddressWS from '../asyncThunks/abstracts/abstractAddress'
+
+const __uuidv4 = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+        /[xy]/g,
+        (c) => {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+        }
+    )
+}
+
+
 const renderWebsocketSlice = createSlice(
     {
         name: 'render/async',
@@ -11,32 +24,34 @@ const renderWebsocketSlice = createSlice(
             messages: [],
             connected: false
         },
-        reducers: {},
-        extraReducers: {
-            [renderWebsocketAsyncThunk.fetchConnect.fulfilled.type]: (state, action) => {
-                state.web_socket = action.web_socket
-                state.address = action.address
-                state.room_uuid = action.room_uuid
+        reducers: {
+            connect(state, action) {
+                state.room_uuid = __uuidv4()
+                state.address = GeneralAddressWS + action.payload.address 
+                state.web_socket = new WebSocket( state.address + state.room_uuid )
                 state.messages = []
                 state.connected = true
             },
-            [renderWebsocketAsyncThunk.fetchSaveMessage.fulfilled.type]: (state, action) => {
+            saveMessage(state, action) {
                 state.messages = [
                     ...state.messages,
-                    action.message
+                    action.payload.message
                 ]
             },
-            [renderWebsocketAsyncThunk.fetchDisconnect.fulfilled.type]: (state, action) => {
-                state.web_socket = action.web_socket
+            disconnect(state) {
+                state.web_socket = null
                 state.address = ''
                 state.room_uuid = ''
                 state.messages = []
                 state.connected = false
             }
-        }
+        },
+        extraReducers: {}
     }
 )
 
 export const renderWebsocketReducer = renderWebsocketSlice.reducer
+
+export const { connect, saveMessage, disconnect } = renderWebsocketSlice.actions
 
 export const renderWebsocketSelector = state => state.renderWebsocketReducer
