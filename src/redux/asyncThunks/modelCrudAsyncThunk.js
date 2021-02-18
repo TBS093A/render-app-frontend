@@ -36,7 +36,7 @@ const fetchGetOneModelAndDownload = createAsyncThunk(
 /**
  * @param body:
  *      param token: base64 token,
- *      param file: document.querySelector('#file').files[0]
+ *      param file: file binary
  *      param user_id: user id
  */
 const fetchUploadModel = createAsyncThunk(
@@ -50,11 +50,6 @@ const fetchUploadModel = createAsyncThunk(
             body,
             body.token
         )
-        // return await abstractService._post(
-        //     endpoint, 
-        //     body,
-        //     body.token
-        // )
     }
 )
 

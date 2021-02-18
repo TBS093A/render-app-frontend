@@ -39,7 +39,7 @@ const ModelShowAndDownloadForm = () => {
             button_value: 'Refresh Models List'
         },
         {
-            type: 'drop-box',
+            type: 'links-listing',
             name: 'Models',
             values: models_list,
             link: GeneralAddress + '/model/',

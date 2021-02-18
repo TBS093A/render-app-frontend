@@ -85,7 +85,7 @@ const fetchSaveMessage = createAsyncThunk(
         thunkAPI
     ) => {
         return {
-            message: body.message
+            message: body
         }
     }
 )
