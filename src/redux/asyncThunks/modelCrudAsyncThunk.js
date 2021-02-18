@@ -45,9 +45,6 @@ const fetchUploadModel = createAsyncThunk(
         body,
         thunkAPI
     ) => {
-        let formData = FormData()
-        formData.append("blend", body.file)
-        body.file = formData
         return await abstractService._post(
             endpoint, 
             body,

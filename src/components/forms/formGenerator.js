@@ -14,7 +14,9 @@ export const FormGenerator = ({
     const handler = async (event) => {
         event.preventDefault()
 
-        if ( inputList[0].action === 'Download' ) {
+        if ( inputList[0].action === 'Download'
+             || inputList[0].action === 'Upload'
+        ) {
             await action()
         } else {
             for (let i = 0; i < refList.length; i++) {
@@ -215,7 +217,8 @@ const UploadInputGenerator = ({
     const onLoadFile = async (event) => {
         event.preventDefault()
         let data = event.target.files[0]
-        input.setFile(await toBase64(data))
+        // input.setFile(await toBase64(data))
+        input.setFile( data )
         setDropInfos(data.name, data.size)
     }
 
@@ -223,11 +226,12 @@ const UploadInputGenerator = ({
         event.preventDefault()
         event.persist()
         let data = event.dataTransfer.files[0]
-        input.setFile(await toBase64(data))
+        // input.setFile(await toBase64(data))
+        input.setFile( data )
         setDropInfos(data.name, data.size)
     }
 
-    const toBase64 = (file) => new Promise((resolve, reject) => {
+    const toBase64 = async (file) => new Promise((resolve, reject) => {
         let fileReader = new FileReader()
         fileReader.readAsDataURL(file)
         fileReader.onload = () => resolve(fileReader.result)

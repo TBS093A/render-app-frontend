@@ -10,17 +10,17 @@ import userAuthAsyncThunk from '../../redux/asyncThunks/userAuthAsyncThunk'
 
 const __setShowGeneral = ( view, key, movements ) => {
 
-    movements.user_view.userCrudView = {
+    let user_default = {
         update_user: false,
         delete_user: false
     }
 
-    movements.model_view.modelCrudView = {
+    let model_default = {
         show_models_and_dwonload: false,
         upload_model: false
     }
 
-    movements.render_view.renderView = {
+    let render_default = {
         show_ready_renders_and_download: false,
         render_functionality: {
             render_single_image: false,
@@ -37,6 +37,12 @@ const __setShowGeneral = ( view, key, movements ) => {
         movements.user_view.setUserCrudView( 
             new_move
         )
+        movements.model_view.setModelCrudView(
+            model_default
+        )
+        movements.render_view.setRenderView(
+            render_default
+        )
     } else if (view === 'model_view') {
         
         let new_move = movements.model_view.modelCrudView
@@ -44,19 +50,31 @@ const __setShowGeneral = ( view, key, movements ) => {
         movements.model_view.setModelCrudView( 
             new_move
         )
+        movements.user_view.setUserCrudView( 
+            user_default
+        )
+        movements.render_view.setRenderView(
+            render_default
+        )
     } else if (view === 'render_view') {
         let new_move = movements.render_view.renderView
         if ( key in new_move ) {
             new_move[key] = true
-            movements.model_view.setModelCrudView( 
+            movements.render_view.setRenderView( 
                 new_move
             )
         } else {
             new_move['render_functionality'][key] = true
-            movements.model_view.setModelCrudView( 
+            movements.render_view.setRenderView( 
                 new_move
             )
         }
+        movements.model_view.setModelCrudView( 
+            model_default
+        )
+        movements.user_view.setUserCrudView( 
+            user_default
+        )
     }
     
 }
@@ -82,7 +100,7 @@ const NavigationBar = ({ movements }) => {
     const dispatch = useDispatch()
 
     useEffect( () => {
-        if ( user_get === {} && token !== '' && user.id > 0)
+        if ( Object.keys(user_get).length === 0 && token !== '' && user.id > 0)
             dispatch(
                 userCrudAsyncThunk.fetchGetOneUser(
                     {
