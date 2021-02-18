@@ -22,7 +22,7 @@ const GeneralView = () => {
     )
     const [modelCrudView, setModelCrudView] = useState(
         {
-            show_models_and_dwonload: false,
+            show_models_and_download: false,
             upload_model: false
         }
     )
@@ -60,16 +60,16 @@ const GeneralView = () => {
                 movements={ movements }
             />
             <UserCrudIndex 
-                movements={ movements }
+                movement={ movements.user_view.userCrudView }
             />
             <ModelCrudIndex 
-                movements={ movements }
+                movement={ movements.model_view.modelCrudView }
             />
             <RenderCrudIndex 
-                movements={ movements }
+                movement={ movements.render_view.renderView }
             />
             <RenderWebsocketIndex 
-                movements={ movements }
+                movement={ movements.render_view.renderView }
             />
         </>
     )

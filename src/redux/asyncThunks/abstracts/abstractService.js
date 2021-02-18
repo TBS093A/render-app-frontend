@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { GeneralAddress } from './abstractAddress'
 
-const APIAddress = 'http://' + GeneralAddress
+const APIAddress = GeneralAddress
 
 let defaultBody = {}
 

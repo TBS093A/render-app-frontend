@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 /**
  * 
@@ -13,15 +13,20 @@ export const FormGenerator = ({
 
     const handler = async (event) => {
         event.preventDefault()
-        for (let i = 0; i < refList.length; i++) {
-            if (refList[i].current.value === ''
-                && inputList[0].action !== 'Update'
-                || i === 0
-                && refList.length !== 1
-            ) {
-                refList[i].current.focus()
-            } else if (i === refList.length - 1) {
-                await action(refList)
+
+        if ( inputList[0].action === 'Download' ) {
+            await action()
+        } else {
+            for (let i = 0; i < refList.length; i++) {
+                if (refList[i].current.value === ''
+                    && inputList[0].action !== 'Update'
+                    || i === 0
+                    && refList.length !== 1
+                ) {
+                    refList[i].current.focus()
+                } else if (i === refList.length - 1) {
+                    await action(refList)
+                }
             }
         }
     }
@@ -51,6 +56,14 @@ export const FormGenerator = ({
                                 key={key}
                             />
                         )
+                    } else if (input.type === 'drop-box') {
+                        return (
+                            <DownloadFilesListInputGenerator 
+                                input={input}
+                                info={info}
+                                key={key}
+                            />
+                        )
                     } else if (input.type === 'file') {
                         return (
                             <UploadInputGenerator
@@ -62,9 +75,16 @@ export const FormGenerator = ({
                     }
                 })
             }
-            <button type='submit'>
-                { info.button_value }
-            </button>
+            {
+                info.button_value === ''
+                ? <></>
+                : <button 
+                      type='submit'
+                  >
+                      { info.button_value }
+                  </button>
+            }
+            
         </form>
     )
 }
@@ -126,6 +146,52 @@ const PasswordInputGenerator = ({
                 ref={input.ref}
                 type='password'
             />
+        </div>
+    )
+}
+
+/**
+ * Text input generator, example:
+ * @param {
+ * {    
+ *  type: 'drop-box',   
+ *  name: 'name',
+ *  values: list,
+ *  link: link to the file
+ * }    } input - basic text input 
+ * @param {
+ * {
+ *  type: 'info',
+ *  action: 'Update'
+ *  endpoint: 'Album'
+ * }    } info - information about form
+ */
+const DownloadFilesListInputGenerator = ({
+    input, info
+}) => {
+
+    return (
+        <div
+            id={input.name + info.action + info.endpoint + 'DropBox'}
+        >
+            {input.name + ':'}
+            {
+                input.values.map( (item, index) => {
+
+                        return (
+                            <div
+                                key={ item }
+                            >
+                                <a 
+                                    href={ input.link + index + '/' }
+                                >
+                                    { item }
+                                </a>
+                            </div>
+                        )
+                    }
+                )
+            }
         </div>
     )
 }
@@ -195,5 +261,7 @@ const UploadInputGenerator = ({
         </div>
     )
 }
+
+
 
 export default FormGenerator

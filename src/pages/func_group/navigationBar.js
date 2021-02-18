@@ -10,32 +10,26 @@ import userAuthAsyncThunk from '../../redux/asyncThunks/userAuthAsyncThunk'
 
 const __setShowGeneral = ( view, key, movements ) => {
 
-    movements.user_view.setUserCrudView( 
-        {
-            update_user: false,
-            delete_user: false
-        }
-    )
+    movements.user_view.userCrudView = {
+        update_user: false,
+        delete_user: false
+    }
 
-    movements.model_view.setModelCrudView( 
-        {
-            show_models_and_dwonload: false,
-            upload_model: false
-        }
-    )
+    movements.model_view.modelCrudView = {
+        show_models_and_dwonload: false,
+        upload_model: false
+    }
 
-    movements.render_view.setRenderView( 
-        {
-            show_ready_renders_and_download: false,
-            render_functionality: {
-                render_single_image: false,
-                render_single_set: false,
-                render_all: false,
-                render_image_by_vector: false,
-                render_set_by_vector: false
-            }
+    movements.render_view.renderView = {
+        show_ready_renders_and_download: false,
+        render_functionality: {
+            render_single_image: false,
+            render_single_set: false,
+            render_all: false,
+            render_image_by_vector: false,
+            render_set_by_vector: false
         }
-    )
+    }
 
     if (view === 'user_view') {
         let new_move = movements.user_view.userCrudView
@@ -44,6 +38,7 @@ const __setShowGeneral = ( view, key, movements ) => {
             new_move
         )
     } else if (view === 'model_view') {
+        
         let new_move = movements.model_view.modelCrudView
         new_move[key] = true
         movements.model_view.setModelCrudView( 
@@ -144,7 +139,7 @@ const NavigationBar = ({ movements }) => {
                     ├── Models
                     </div>
                     <div style={ __styleChanger( showModels ) }>
-                        <div onClick={ () => __setShowGeneral( 'model_view', 'show_models_and_dwonload', movements )}>
+                        <div onClick={ () => __setShowGeneral( 'model_view', 'show_models_and_download', movements )}>
                             │   ├── Show Models & Download
                         </div>
                         <div onClick={ () => __setShowGeneral( 'model_view', 'upload_model', movements ) }>
