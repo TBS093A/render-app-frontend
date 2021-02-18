@@ -45,11 +45,16 @@ const fetchUploadModel = createAsyncThunk(
         body,
         thunkAPI
     ) => {
-        return await abstractService._post(
-            endpoint, 
+       return await abstractService.axiosFilePost(
+            endpoint,
             body,
             body.token
         )
+        // return await abstractService._post(
+        //     endpoint, 
+        //     body,
+        //     body.token
+        // )
     }
 )
 

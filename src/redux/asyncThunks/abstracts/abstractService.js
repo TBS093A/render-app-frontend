@@ -72,7 +72,6 @@ const responseAbstract = async (endpoint, method, token, body) => {
       body,
     )
   )
-  console.log(response)
   return response
 }
 
@@ -83,14 +82,6 @@ const headerBuilder = (url, method, token, body) => {
         'accept': 'application/json',
         'content-type': 'application/json',
     }
-    if ('file' in body) {
-        headers_r = {
-            'authorization': token,
-            'x-csrftoken': getCookie('csrftoken'),
-            // 'accept': 'multipart/form-data',
-            // 'content-type': 'multipart/form-data'
-        }
-    }
     let headers = {
         url: url,
         method: method,
@@ -98,15 +89,9 @@ const headerBuilder = (url, method, token, body) => {
         credentials: 'same-origin'
     }
     if (method === 'PUT' || method === 'POST' || method === 'PATCH') {
-        if ('file' in body) {
-            headers = Object.assign({}, headers, {
-                data: body,
-            })
-        } else {
-            headers = Object.assign({}, headers, {
-                data: JSON.stringify(body),
-            })
-        }
+        headers = Object.assign({}, headers, {
+            data: JSON.stringify(body),
+        })
     }
     return headers
 }
@@ -129,7 +114,23 @@ const getCookie = (name) => {
     return decodeURIComponent(token[0].split('=')[1]);
 }
 
-
+const axiosFilePost = async ( endpoint, body, token ) => {
+    let formData = new FormData()
+    formData.append('file', body.file)
+    formData.append('user_id', body.user_id)
+    let response = await axios.post( 
+        APIAddress + endpoint,
+        formData,
+        {
+            headers: {
+              'authorization': token,
+              'x-csrftoken': getCookie('csrftoken')
+          }
+        } 
+    )
+    console.log(response)
+    return response
+}
 
 export default {
   APIAddress,
@@ -138,5 +139,6 @@ export default {
   _post,
   _put,
   _patch,
-  _delete
+  _delete,
+  axiosFilePost
 }
