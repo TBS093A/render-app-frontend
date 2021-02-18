@@ -72,6 +72,7 @@ const responseAbstract = async (endpoint, method, token, body) => {
       body,
     )
   )
+  console.log(response)
   return response
 }
 
@@ -86,8 +87,8 @@ const headerBuilder = (url, method, token, body) => {
         headers_r = {
             'authorization': token,
             'x-csrftoken': getCookie('csrftoken'),
-            'accept': 'multipart/form-data',
-            'content-type': 'multipart/form-data',
+            // 'accept': 'multipart/form-data',
+            // 'content-type': 'multipart/form-data'
         }
     }
     let headers = {
@@ -97,9 +98,15 @@ const headerBuilder = (url, method, token, body) => {
         credentials: 'same-origin'
     }
     if (method === 'PUT' || method === 'POST' || method === 'PATCH') {
-        headers = Object.assign({}, headers, {
-            data: JSON.stringify(body),
-        })
+        if ('file' in body) {
+            headers = Object.assign({}, headers, {
+                data: body,
+            })
+        } else {
+            headers = Object.assign({}, headers, {
+                data: JSON.stringify(body),
+            })
+        }
     }
     return headers
 }

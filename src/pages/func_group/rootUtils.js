@@ -6,8 +6,7 @@ import { userAuthSelector } from '../../redux/slices/userAuthSlice'
 import UserAuthIndex from './user_auth/userAuthIndex'
 import UserCrudIndex from './user_crud/userCrudIndex'
 import ModelCrudIndex from './model_crud/modelCrudIndex'
-import RenderCrudIndex from './render_crud/renderCrudIndex'
-import RenderWebsocketIndex from './render_websocket/renderWebsocketIndex'
+import RenderIndex from './render/renderIndex'
 
 import NavigationBar from './navigationBar'
 
@@ -65,12 +64,12 @@ const GeneralView = () => {
             <ModelCrudIndex 
                 movement={ movements.model_view.modelCrudView }
             />
-            <RenderCrudIndex 
+            <RenderIndex 
                 movement={ movements.render_view.renderView }
             />
-            <RenderWebsocketIndex 
+            {/* <RenderWebsocketIndex 
                 movement={ movements.render_view.renderView }
-            />
+            /> */}
         </>
     )
 }

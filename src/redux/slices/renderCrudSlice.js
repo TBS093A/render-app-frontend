@@ -11,7 +11,7 @@ const renderCrudSlice = createSlice(
         reducers: {},
         extraReducers: {
             [renderCrudAsyncThunk.fetchGetAllRenders.fulfilled.type]: (state, action) => {
-                state.render_list = action.payload.data.render_list
+                state.render_list = action.payload.data
             },
             [renderCrudAsyncThunk.fetchGetOneRenderAndDownload.fulfilled.type]: (state, action) => {
                 state.download_zip_file = action.payload.data
