@@ -1,1 +1,1 @@
-export const GeneralAddress = 'localhost:9090'
+export const GeneralAddress = 'http://localhost:9090'

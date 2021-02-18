@@ -8,7 +8,6 @@ const modelCrudSlice = createSlice(
             models_list: [],
             download_blend_file: '',
             upload_blend_file_status: ''
-
         },
         reducers: {},
         extraReducers: {
