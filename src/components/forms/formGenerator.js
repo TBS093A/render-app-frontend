@@ -14,7 +14,10 @@ export const FormGenerator = ({
     const handler = async (event) => {
         event.preventDefault()
 
-        if ( inputList[0].action === 'Download'
+        if ( inputList[0].action === 'Async' ) {
+            await action(refList)
+        } else if ( 
+             inputList[0].action === 'Download'
              || inputList[0].action === 'Upload'
         ) {
             await action()
@@ -58,7 +61,7 @@ export const FormGenerator = ({
                                 key={key}
                             />
                         )
-                    } else if (input.type === 'drop-box') {
+                    } else if (input.type === 'links-listing') {
                         return (
                             <DownloadFilesListInputGenerator 
                                 input={input}
@@ -69,6 +72,22 @@ export const FormGenerator = ({
                     } else if (input.type === 'file') {
                         return (
                             <UploadInputGenerator
+                                input={input}
+                                info={info}
+                                key={key}
+                            />
+                        )
+                    } else if (input.type === 'choice-listing') {
+                        return (
+                            <ChoiceListingGenerator 
+                                input={input}
+                                info={info}
+                                key={key}
+                            />
+                        )
+                    } else if (input.type === 'range') {
+                        return (
+                            <RangeInputGenerator 
                                 input={input}
                                 info={info}
                                 key={key}
@@ -199,6 +218,54 @@ const DownloadFilesListInputGenerator = ({
 }
 
 /**
+ * Text input generator, example:
+ * @param {
+ * {    
+ *  type: 'drop-box',   
+ *  name: 'name',
+ *  values: [ 'string' ],
+ *  ref: React.createRef()
+ * }    } input - basic text input 
+ * @param {
+ * {
+ *  type: 'info',
+ *  action: 'Update'
+ *  endpoint: 'Album'
+ * }    } info - information about form
+ */
+const ChoiceListingGenerator = ({
+    input, info
+}) => {
+
+    const __handleRef = ( item ) => {
+        input.ref.current = {
+            value: item
+        }
+    }
+
+    return (
+        <div
+            id={input.name + info.action + info.endpoint + 'DropBox'}
+        >
+            {input.name + ':'}
+            {
+                input.values.map( (item) => {
+                        return (
+                            <div
+                                key={ item }
+                                onClick={ () => __handleRef( item ) }
+                            >
+                                    { item }
+                            </div>
+                        )
+                    }
+                )
+            }
+        </div>
+    )
+}
+
+/**
  * Upload file input generator, example:
  * @param {
  * {    
@@ -266,6 +333,51 @@ const UploadInputGenerator = ({
     )
 }
 
+/**
+ * Text input generator, example:
+ * @param {
+ * {    
+ *  type: 'range',   
+ *  name: 'name',
+ *  min: min range value,
+ *  max: max range value,
+ *  step: step of value,
+ *  unit: unit of range value,       
+ *  ref: React.createRef()  
+ * }    } input - basic text input 
+ * @param {
+ * {
+ *  type: 'info',
+ *  action: 'Update'
+ *  endpoint: 'Album'
+ * }    } info - information about form
+ */
+const RangeInputGenerator = ({
+    input, info
+}) => {
 
+    let name = input.name + info.action + info.endpoint + 'Input'
+
+    const [value, setValue] = useState(0)
+
+    return (
+        <div>
+            <div>
+                {input.name + ': ' + value + ' ' + input.unit }
+            </div>
+            <input
+                style={ { width: '300px' } }
+                id={name}
+                name={name}
+                min={input.min}
+                max={input.max}
+                step={input.step}
+                ref={input.ref}
+                type='range'
+                onChange={ event => setValue( event.target.value ) }
+            />
+        </div>
+    )
+}
 
 export default FormGenerator

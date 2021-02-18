@@ -39,7 +39,7 @@ const RenderShowAndDownloadForm = () => {
             button_value: 'Refresh Renders List'
         },
         {
-            type: 'drop-box',
+            type: 'links-listing',
             name: 'Renders',
             values: render_list,
             link: GeneralAddress + '/render/',
