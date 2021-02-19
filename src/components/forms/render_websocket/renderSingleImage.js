@@ -1,23 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { userAuthSelector } from '../../../redux/slices/userAuthSlice'
 import { modelCrudSelector } from '../../../redux/slices/modelCrudSlice'
 
-import { renderWebsocketSelector } from '../../../redux/slices/renderWebsocketSlice'
-import { connect, saveMessage, disconnect } from '../../../redux/slices/renderWebsocketSlice'
-
 import modelCrudAsyncThunk from '../../../redux/asyncThunks/modelCrudAsyncThunk'
 
-import FormGenerator from '../formGenerator'
+import AbstractWebsocket from '../abstractWebsocket'
 
 
 const RenderSingleImageForm = () => {
 
-    let web_socket = null
-
     const dispatch = useDispatch()
-    const stableDispatch = useCallback(dispatch, [])
 
     const choiceListing = React.createRef()
     const setIdRange = React.createRef()
@@ -25,17 +19,8 @@ const RenderSingleImageForm = () => {
     const cameraIdRange = React.createRef()
     const resolutionXRange = React.createRef()
     const resolutionYRange = React.createRef()
-    
-    const { 
-        web_socket_address,
-        address,
-        room_uuid,
-        messages,
-        connected
-    } = useSelector( renderWebsocketSelector )
 
     const { models_list } = useSelector( modelCrudSelector )
-
     const { user, token } = useSelector( userAuthSelector )
 
     let refList = [
@@ -107,95 +92,12 @@ const RenderSingleImageForm = () => {
         },
     ]
 
-    const handleConnect = ( event ) => {
-
-        event.preventDefault()
-
-        if ( web_socket === null && address === '' && room_uuid === '') {
-            stableDispatch(
-                connect( 
-                    {
-                        address: '/single/image/'
-                    } 
-                )
-            )
-            if (web_socket_address !== '') {
-                web_socket = new WebSocket( web_socket_address )
-            }
-        }
-
-        console.log('connect')
-
-    }
-
-    const handleSendMessage = ( refs ) => {
-
-        let rotate_conv = refs[2].current.value / 62  // on backend 0.1 - 6.2 value
-
-        let body = {
-            // fileName: refs[0].current.value,
-            fileName: 'testHand',
-            setID: refs[1].current.value,
-            rotate: rotate_conv,
-            nameSeries: 0,  // index render picture in set (useless on the front & disable)
-            cameraID: refs[3].current.value,
-            resolutionX: refs[4].current.value,
-            resolutionY: refs[5].current.value
-        }
-        console.log( body )
-        try {
-            web_socket.send(
-                JSON.stringify(
-                    body
-                )
-            )
-        } catch (error) {
-            web_socket.close()
-            stableDispatch(
-                disconnect()
-            )
-            console.log(error)
-        }
-    }
-
-    const handleDisconnect = ( event ) => {
-
-        event.preventDefault()
-
-        if ( address !== '' && room_uuid !== '') {
-            try {
-                web_socket.close()
-                stableDispatch(
-                    disconnect()
-                )
-            } catch (error) {
-                console.log(error)
-            }
-        }
-
-        console.log('disconnect')
-
-    }
-
-    if ( connected === true && address !== '' && web_socket !== null ) {
-        web_socket.onmessage = (event) => {
-            console.log( event.data )
-            // stableDispatch(
-            //     saveMessage(
-            //         {
-            //             message: JSON.parse( event.data )
-            //         }
-            //     )
-            // )
-        }
-    }
-
     let blocker = false
 
     useEffect( 
         () => {
             
-            if ( models_list.length === 0 && user.id > 0 && token !== '' && !blocker ) {
+            if ( models_list.length === 0 && user.id > 0 && token !== '' && blocker === false ) {
                 dispatch( modelCrudAsyncThunk.fetchGetAllModels( token ) )
                 if ( models_list.length === 0 ) {
                     blocker = true
@@ -207,40 +109,11 @@ const RenderSingleImageForm = () => {
 
     return (
         <>
-            <FormGenerator 
+            <AbstractWebsocket 
+                addressWS={ '/single/image/' }
                 inputList={ inputList }
                 refList={ refList }
-                action={ handleSendMessage }
             />
-            {
-                connected
-                ? 
-                    <button onClick={ (event) => handleDisconnect(event) }>
-                        Disconnect
-                    </button>
-                :
-                    <button onClick={ (event) => handleConnect(event) }>
-                        Connect
-                    </button>
-            }
-            {
-                messages.map( (item) => {
-                        return (
-                            <>
-                                <div>
-                                    { item.info }
-                                </div>
-                                <div>
-                                    { item.details }
-                                </div>
-                                <div>
-                                    { item.group }
-                                </div>
-                            </>
-                        )
-                    }
-                )
-            }
         </>
     )
 }
