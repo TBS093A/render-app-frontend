@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import renderWebsocketAsyncThunk from '../asyncThunks/renderWebsocketAsyncThunk'
 
-import GeneralAddressWS from '../asyncThunks/abstracts/abstractAddress'
+import { GeneralAddressWS } from '../asyncThunks/abstracts/abstractAddress'
+
 
 const __uuidv4 = () => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
@@ -13,22 +14,23 @@ const __uuidv4 = () => {
     )
 }
 
+const initialState = {
+    web_socket_address: '',
+    address: '',
+    room_uuid: '',
+    messages: [],
+    connected: false
+}
 
 const renderWebsocketSlice = createSlice(
     {
         name: 'render/async',
-        initialState: {
-            web_socket: null,
-            address: '',
-            room_uuid: '',
-            messages: [],
-            connected: false
-        },
+        initialState,
         reducers: {
             connect(state, action) {
                 state.room_uuid = __uuidv4()
                 state.address = GeneralAddressWS + action.payload.address 
-                state.web_socket = new WebSocket( state.address + state.room_uuid )
+                state.web_socket_address = state.address + state.room_uuid
                 state.messages = []
                 state.connected = true
             },
@@ -39,7 +41,7 @@ const renderWebsocketSlice = createSlice(
                 ]
             },
             disconnect(state) {
-                state.web_socket = null
+                state.web_socket_address = ''
                 state.address = ''
                 state.room_uuid = ''
                 state.messages = []

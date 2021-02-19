@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { userAuthSelector } from '../../../redux/slices/userAuthSlice'
 import { modelCrudSelector } from '../../../redux/slices/modelCrudSlice'
-import { renderWebsocketSelector } from '../../../redux/slices/renderWebsocketSlice'
 
+import { renderWebsocketSelector } from '../../../redux/slices/renderWebsocketSlice'
 import { connect, saveMessage, disconnect } from '../../../redux/slices/renderWebsocketSlice'
 
 import modelCrudAsyncThunk from '../../../redux/asyncThunks/modelCrudAsyncThunk'
@@ -14,7 +14,10 @@ import FormGenerator from '../formGenerator'
 
 const RenderSingleImageForm = () => {
 
+    let web_socket = null
+
     const dispatch = useDispatch()
+    const stableDispatch = useCallback(dispatch, [])
 
     const choiceListing = React.createRef()
     const setIdRange = React.createRef()
@@ -24,7 +27,7 @@ const RenderSingleImageForm = () => {
     const resolutionYRange = React.createRef()
     
     const { 
-        web_socket,
+        web_socket_address,
         address,
         room_uuid,
         messages,
@@ -104,13 +107,34 @@ const RenderSingleImageForm = () => {
         },
     ]
 
+    const handleConnect = ( event ) => {
+
+        event.preventDefault()
+
+        if ( web_socket === null && address === '' && room_uuid === '') {
+            stableDispatch(
+                connect( 
+                    {
+                        address: '/single/image/'
+                    } 
+                )
+            )
+            if (web_socket_address !== '') {
+                web_socket = new WebSocket( web_socket_address )
+            }
+        }
+
+        console.log('connect')
+
+    }
+
     const handleSendMessage = ( refs ) => {
 
         let rotate_conv = refs[2].current.value / 62  // on backend 0.1 - 6.2 value
 
         let body = {
             // fileName: refs[0].current.value,
-            fileName: 'testHand.blend',
+            fileName: 'testHand',
             setID: refs[1].current.value,
             rotate: rotate_conv,
             nameSeries: 0,  // index render picture in set (useless on the front & disable)
@@ -119,11 +143,51 @@ const RenderSingleImageForm = () => {
             resolutionY: refs[5].current.value
         }
         console.log( body )
-        web_socket.send(
-            JSON.stringify(
-                body
+        try {
+            web_socket.send(
+                JSON.stringify(
+                    body
+                )
             )
-        )
+        } catch (error) {
+            web_socket.close()
+            stableDispatch(
+                disconnect()
+            )
+            console.log(error)
+        }
+    }
+
+    const handleDisconnect = ( event ) => {
+
+        event.preventDefault()
+
+        if ( address !== '' && room_uuid !== '') {
+            try {
+                web_socket.close()
+                stableDispatch(
+                    disconnect()
+                )
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        console.log('disconnect')
+
+    }
+
+    if ( connected === true && address !== '' && web_socket !== null ) {
+        web_socket.onmessage = (event) => {
+            console.log( event.data )
+            // stableDispatch(
+            //     saveMessage(
+            //         {
+            //             message: JSON.parse( event.data )
+            //         }
+            //     )
+            // )
+        }
     }
 
     let blocker = false
@@ -137,24 +201,6 @@ const RenderSingleImageForm = () => {
                     blocker = true
                 }
             }
-
-            if ( web_socket === null && address === '' && room_uuid === '') {
-                connect( 
-                    {
-                        address: '/single/image/'
-                    } 
-                )
-            }
-
-            if ( address !== '' && web_socket !== null ) {
-                web_socket.onmessage = (event) => { 
-                    saveMessage( 
-                        {
-                            message: JSON.parse( event.data ) 
-                        }
-                    ) 
-                }
-            }
         
         }
     )
@@ -166,6 +212,17 @@ const RenderSingleImageForm = () => {
                 refList={ refList }
                 action={ handleSendMessage }
             />
+            {
+                connected
+                ? 
+                    <button onClick={ (event) => handleDisconnect(event) }>
+                        Disconnect
+                    </button>
+                :
+                    <button onClick={ (event) => handleConnect(event) }>
+                        Connect
+                    </button>
+            }
             {
                 messages.map( (item) => {
                         return (
