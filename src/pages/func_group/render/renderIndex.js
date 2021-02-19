@@ -3,6 +3,10 @@ import React, { useState, useEffect } from 'react'
 import RenderShowAndDownloadForm from '../../../components/forms/render_crud/renderShowReadyRendersAndDownload'
 
 import RenderSingleImageForm from '../../../components/forms/render_websocket/renderSingleImage'
+import RenderSingleSetForm from '../../../components/forms/render_websocket/renderSingleSet'
+import RenderAllForm from '../../../components/forms/render_websocket/renderAll'
+
+import RenderVectorSingleImageForm from '../../../components/forms/render_websocket/renderVectorImage'
 
 
 const __handleSwap = (name, movement) => {
@@ -42,6 +46,15 @@ const RenderIndex = ( movement ) => {
             </div>
             <div style={ __handleSwap( 'render_single_image', movement ) }>
                 <RenderSingleImageForm />
+            </div>
+            <div style={ __handleSwap( 'render_single_set', movement ) }>
+                <RenderSingleSetForm />
+            </div>
+            <div style={ __handleSwap( 'render_all', movement ) }>
+                <RenderAllForm />
+            </div>
+            <div style={ __handleSwap( 'render_image_by_vector', movement ) }>
+                <RenderVectorSingleImageForm />
             </div>
         </div>
     )

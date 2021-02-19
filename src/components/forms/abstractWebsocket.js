@@ -1,15 +1,46 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { renderWebsocketSelector } from '../../../redux/slices/renderWebsocketSlice'
-import { connect, saveMessage, disconnect } from '../../../redux/slices/renderWebsocketSlice'
+import { renderWebsocketSelector } from '../../redux/slices/renderWebsocketSlice'
+import { connect, saveMessage, resetMessages, disconnect } from '../../redux/slices/renderWebsocketSlice'
 
-import FormGenerator from '../formGenerator'
+import FormGenerator from './formGenerator'
 
 
-const AbstractWebsocket = ({ addressWS, inputList, refList }) => {
+const ProgressBar = () => {
 
-    let web_socket = null
+    const {
+        percents,
+        connect
+    } = useSelector( renderWebsocketSelector )
+
+    return (
+        <div style={ { width: '300px', height: '20px' } }>
+            <div style={ { width: '100%', height: '100%', marginBottom: '-20px', textAlign: 'center' } }>
+                {
+                    typeof percents === 'number'
+                    ? 'Progress: ' + percents + '%'
+                    : percents
+                }
+            </div>
+            <div style={ { width: '100%', height: '100%', backgroundColor: 'white' } }>
+                {
+                    typeof percents === 'number'
+                    ? <div style={ { width: percents + '%', height: '100%', backgroundColor: 'green' } }>
+                      </div>
+                    : <div style={ { width: '100%', height: '100%', backgroundColor: 'green' } }>
+                      </div>
+                }
+            </div>
+        </div>
+    )
+
+}
+
+
+const AbstractWebsocket = ({ addressWS, inputList, refList, bodyComparer }) => {
+
+    const [web_socket, setWebsocket] = useState(null)
 
     const dispatch = useDispatch()
 
@@ -36,43 +67,39 @@ const AbstractWebsocket = ({ addressWS, inputList, refList }) => {
             )
         }
 
-        console.log('connect')
 
     }
 
     const handleSendMessage = ( refs ) => {
+        
+        let body = bodyComparer( refs )
 
-        let rotate_conv = refs[2].current.value / 62  // on backend 0.1 - 6.2 value
-
-        let body = {
-            // fileName: refs[0].current.value,
-            fileName: 'testHand',
-            setID: refs[1].current.value,
-            rotate: rotate_conv,
-            nameSeries: 0,  // index render picture in set (useless on the front & disable)
-            cameraID: refs[3].current.value,
-            resolutionX: refs[4].current.value,
-            resolutionY: refs[5].current.value
-        }
         console.log( body )
         try {
-            
-            web_socket.onopen = (event) => { 
-                
-                web_socket.send(
-                    JSON.stringify(
-                        body
-                    )
-                )
 
-            }
+            dispatch(
+                saveMessage(
+                    {
+                        message: { info: 0 } // start
+                    }
+                )
+            )
+            
+            web_socket.send(
+                JSON.stringify(
+                    body
+                )
+            )
 
         } catch (error) {
+
             web_socket.close()
             dispatch(
                 disconnect()
             )
+            setWebsocket(null)
             console.log(error)
+        
         }
     }
 
@@ -90,31 +117,42 @@ const AbstractWebsocket = ({ addressWS, inputList, refList }) => {
                 console.log(error)
             }
         } else if ( address !== '' && room_uuid !== '' ) {
-
+            dispatch(
+                disconnect()
+            )
         }
+
+        setWebsocket(null)
 
         console.log('disconnect')
 
-    }
-
-    if ( web_socket !== null && connected === true && address !== '' ) {
-        web_socket.onmessage = (event) => {
-            console.log( event.data )
-            dispatch(
-                saveMessage(
-                    {
-                        message: JSON.parse( event.data )
-                    }
-                )
-            )
-        }
     }
 
     useEffect( 
         () => {
 
             if ( web_socket_address !== '' && web_socket === null ) {
-                web_socket = new WebSocket( web_socket_address )
+
+                console.log( 'connect' )
+                
+                setWebsocket(new WebSocket( web_socket_address ))
+            }
+
+            if ( web_socket !== null ) {
+
+                web_socket.onmessage = (event) => {
+                    console.log( event.data )
+                    if ( messages[ messages.length - 1 ] !== JSON.parse( event.data ) ) {
+                        dispatch(
+                            saveMessage(
+                                {
+                                    message: JSON.parse( event.data )
+                                }
+                            )
+                        )
+                    }
+                }
+
             }
         
         }
@@ -127,6 +165,7 @@ const AbstractWebsocket = ({ addressWS, inputList, refList }) => {
                 refList={ refList }
                 action={ handleSendMessage }
             />
+            <ProgressBar />
             {
                 connected
                 ? 
@@ -138,24 +177,54 @@ const AbstractWebsocket = ({ addressWS, inputList, refList }) => {
                         Connect
                     </button>
             }
+            <div>
             {
                 messages.map( (item) => {
                         return (
-                            <>
-                                <div>
-                                    { item.info }
-                                </div>
-                                <div>
-                                    { item.details }
-                                </div>
-                                <div>
-                                    { item.group }
-                                </div>
-                            </>
+                            <div>
+                                <>
+                                    {
+                                        Object.keys(item).map( (key) => {
+
+                                                if ( key == 'details' ) {
+                                                    return (
+                                                        <>
+                                                            {
+                                                                Object.keys(item[key]).map( (keyTwo) => {
+                                                                        return (
+                                                                            <div>
+                                                                                { '    ' + keyTwo + ': ' + item[key][keyTwo] + ' ' }
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                )
+                                                            }
+                                                        </>
+                                                    )
+                                                } else if ( key === 'image' ) {
+                                                    return (
+                                                        <img 
+                                                            src={ 'data:image/png;base64, ' + item[key] }
+                                                            style={ { width: '300px', height: '200px' } }
+                                                        />
+                                                    )
+                                                } else {
+                                                    return (
+                                                        <>
+                                                        { key + ': ' + item[key] + ' ' }
+                                                        </>
+                                                    )
+                                                }
+                                            } 
+                                        )
+                                    }
+                                </>
+                            </div>
                         )
                     }
                 )
             }
+            </div>
         </>
     )
 }
