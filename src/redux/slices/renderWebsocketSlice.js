@@ -19,6 +19,7 @@ const initialState = {
     address: '',
     room_uuid: '',
     messages: [],
+    percents: 0.0,
     connected: false
 }
 
@@ -32,6 +33,7 @@ const renderWebsocketSlice = createSlice(
                 state.address = GeneralAddressWS + action.payload.address 
                 state.web_socket_address = state.address + state.room_uuid
                 state.messages = []
+                state.percents = 0.0
                 state.connected = true
             },
             saveMessage(state, action) {
@@ -39,6 +41,10 @@ const renderWebsocketSlice = createSlice(
                     ...state.messages,
                     action.payload.message
                 ]
+                state.percents = action.payload.message.info
+            },
+            resetMessages(state) {
+                state.messages = []
             },
             disconnect(state) {
                 state.web_socket_address = ''

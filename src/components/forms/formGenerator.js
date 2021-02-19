@@ -93,6 +93,14 @@ export const FormGenerator = ({
                                 key={key}
                             />
                         )
+                    } else if (input.type === 'vector') {
+                        return (
+                            <VectorInputGenerator
+                                input={input}
+                                info={info}
+                                key={key}
+                            />
+                        )
                     }
                 })
             }
@@ -223,7 +231,7 @@ const DownloadFilesListInputGenerator = ({
  * {    
  *  type: 'drop-box',   
  *  name: 'name',
- *  values: [ 'string' ],
+ *  values: list,
  *  ref: React.createRef()
  * }    } input - basic text input 
  * @param {
@@ -371,6 +379,7 @@ const RangeInputGenerator = ({
                 name={name}
                 min={input.min}
                 max={input.max}
+                defaultValue={input.min}
                 step={input.step}
                 ref={input.ref}
                 type='range'
@@ -379,5 +388,109 @@ const RangeInputGenerator = ({
         </div>
     )
 }
+
+const RangeGenerator = ({ 
+    key,
+    label,
+    labelStyle,
+    valueStyle,
+    style,
+    name,
+    unit,
+    min,
+    max,
+    defaultValue,
+    step,
+    reference
+}) => {
+
+    const [value, setValue] = useState(0)
+
+    return (
+        <>
+            <div style={ labelStyle }>
+                { label + ': ' }
+            </div>
+            <input
+                key={key}
+                style={ style }
+                id={ name }
+                name={ name }
+                min={min}
+                max={max}
+                defaultValue={ defaultValue }
+                step={step}
+                ref={reference}
+                type='range'
+                onChange={ event => setValue( event.target.value ) }
+            />
+            <div style={ valueStyle }>
+                { value + ' ' + unit }
+            </div>
+        </>
+    )
+
+}
+
+/**
+ * Text input generator, example:
+ * @param {
+ * {    
+ *  type: 'vector',   
+ *  name: 'name',     
+ *  refDict: 
+ *  {
+ *      x: React.createRef(),
+ *      y: React.createRef(),
+ *      z: React.createRef()
+ *  }  
+ * }    } input - basic text input 
+ * @param {
+ * {
+ *  type: 'info',
+ *  action: 'Update'
+ *  endpoint: 'Album'
+ * }    } info - information about form
+ */
+const VectorInputGenerator = ({
+    input, info
+}) => {
+
+    const [value, setValue] = useState(0)
+
+    return (
+        <div style={ { display: 'flex', width: '' } }>
+            <div style={ { width: '300px' } }>
+                { input.name }
+            </div>
+            {
+                Object.keys(input.refDict).map( (key) => {
+
+                        let name = input.name + key + info.action + info.endpoint + 'Input'
+                        return (
+                            <div style={ { display: 'flex', width: '150px' } }>
+                                <RangeGenerator 
+                                    key={key}
+                                    label={key}
+                                    labelStyle={ { width: '40px' } }
+                                    valueStyle={ { width: '100px' } }
+                                    style={ { width: '80px' } }
+                                    name={name}
+                                    unit={ '' }
+                                    min={input.min[key]}
+                                    max={input.max[key]}
+                                    defaultValue={input.min[key]}
+                                    step={0.1}
+                                    reference={input.refDict[key]}
+                                />
+                            </div>
+                        )
+                    }
+                )
+            }
+        </div>
+    )
+}
+
 
 export default FormGenerator
