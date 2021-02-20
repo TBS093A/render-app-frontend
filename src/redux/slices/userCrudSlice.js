@@ -25,19 +25,13 @@ const userCrudSlice = createSlice(
                 state.user_get = action.payload.data
             },
             [userCrudAsyncThunk.fetchRegister.fulfilled.type]: (state, action) => {
-                try {
-                    state.user_register.id = action.payload.data.id
-                    state.user_register.username = action.payload.data.username
-                    state.user_register.email = action.payload.data.email
-                    state.info = 'register success'
-                } catch {
-                    state.info = 'register failed'
-                }
+                state.user_register = action.payload.data
+                state.info = 'register success'
             },
             [userCrudAsyncThunk.fetchUpdateUser.fulfilled.type]: (state, action) => {
                 state.user_update = action.payload.data
             },
-            [userCrudAsyncThunk.fetchDeleteUser.fulfilled.type]: (state, action) => {
+            [userCrudAsyncThunk.fetchDeleteUser.fulfilled.type]: (state) => {
                 state.users_list = []
                 state.user_get = {}
                 state.user_register = {}
