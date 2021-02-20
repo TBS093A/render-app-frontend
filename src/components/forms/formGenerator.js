@@ -39,7 +39,7 @@ export const FormGenerator = ({
     let info
 
     return (
-        <form onSubmit={event => handler(event)}>
+        <form onSubmit={event => handler(event)} className="form">
             {
                 inputList.map((input, key) => {
 
@@ -137,8 +137,10 @@ const TextInputGenerator = ({
     input, info
 }) => {
     return (
-        <div>
-            {input.name + ':'}
+        <div className="input_generate">
+            <div className="input_labels">
+                {input.name + ':'}
+            </div>
             <input
                 id={input.name + info.action + info.endpoint + 'Input'}
                 autoComplete='off'
@@ -167,8 +169,10 @@ const PasswordInputGenerator = ({
     input, info
 }) => {
     return (
-        <div>
-            {input.name + ':'}
+        <div className="input_generate">
+            <div className="input_labels">
+                {input.name + ':'}
+            </div>
             <input
                 id={input.name + info.action + info.endpoint + 'Input'}
                 autoComplete='off'
@@ -325,13 +329,13 @@ const UploadInputGenerator = ({
 
     return (
         <div onDrop={event => onLoadFileDrop(event)} >
-            <pre style={{ marginTop: '25px', marginLeft: '40px' }}>
+            <pre style={{ marginLeft: '40px' }}>
                 {input.dropInfo}
             </pre>
             <input
                 style={{ marginTop: '-55px' }}
                 id={input.name + info.action + info.endpoint + 'Input'}
-                className='uploadInput'
+                className='upload_input'
                 type='file'
                 accept={input.fileType + '/*'}
                 autoComplete='off'
@@ -374,7 +378,7 @@ const RangeInputGenerator = ({
                 {input.name + ': ' + value + ' ' + input.unit }
             </div>
             <input
-                style={ { width: '300px' } }
+                style={ { width: '380px' } }
                 id={name}
                 name={name}
                 min={input.min}
@@ -407,7 +411,7 @@ const RangeGenerator = ({
     const [value, setValue] = useState(0)
 
     return (
-        <>
+        <div style={ { display: 'flex' } }>
             <div style={ labelStyle }>
                 { label + ': ' }
             </div>
@@ -427,7 +431,7 @@ const RangeGenerator = ({
             <div style={ valueStyle }>
                 { value + ' ' + unit }
             </div>
-        </>
+        </div>
     )
 
 }
@@ -456,38 +460,38 @@ const VectorInputGenerator = ({
     input, info
 }) => {
 
-    const [value, setValue] = useState(0)
-
     return (
-        <div style={ { display: 'flex', width: '' } }>
-            <div style={ { width: '300px' } }>
+        <div style={ { width: '' } }>
+            <div style={ { width: '100%' } }>
                 { input.name }
             </div>
-            {
-                Object.keys(input.refDict).map( (key) => {
+            <div style={ { display: 'flex' } }>
+                {
+                    Object.keys(input.refDict).map( (key) => {
 
-                        let name = input.name + key + info.action + info.endpoint + 'Input'
-                        return (
-                            <div style={ { display: 'flex', width: '150px' } }>
-                                <RangeGenerator 
-                                    key={key}
-                                    label={key}
-                                    labelStyle={ { width: '40px' } }
-                                    valueStyle={ { width: '100px' } }
-                                    style={ { width: '80px' } }
-                                    name={name}
-                                    unit={ '' }
-                                    min={input.min[key]}
-                                    max={input.max[key]}
-                                    defaultValue={input.min[key]}
-                                    step={0.1}
-                                    reference={input.refDict[key]}
-                                />
-                            </div>
-                        )
-                    }
-                )
-            }
+                            let name = input.name + key + info.action + info.endpoint + 'Input'
+                            return (
+                                <div style={ { display: 'flex', width: '140px' } }>
+                                    <RangeGenerator 
+                                        key={key}
+                                        label={key}
+                                        labelStyle={ { width: '5px', marginTop: '15px' } }
+                                        valueStyle={ { width: '5px', marginTop: '15px', marginLeft: '5px' } }
+                                        style={ { width: '80px' } }
+                                        name={name}
+                                        unit={ '' }
+                                        min={input.min[key]}
+                                        max={input.max[key]}
+                                        defaultValue={input.min[key]}
+                                        step={0.1}
+                                        reference={input.refDict[key]}
+                                    />
+                                </div>
+                            )
+                        }
+                    )
+                }
+            </div>
         </div>
     )
 }

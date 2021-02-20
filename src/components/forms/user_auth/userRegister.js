@@ -67,7 +67,9 @@ const UserRegisterForm = () => {
                 refList={ refList }
                 action={ register }
             />
-            { info }
+            <div className='form_info'>
+                { info }
+            </div>
         </>
     )
 

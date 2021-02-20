@@ -317,8 +317,8 @@ const RenderVectorSingleImageForm = () => {
         },
         {
             type: 'vector',
-            name: 'Middle Finger 3',
-            native: 'Środkowy 3',
+            name: 'Middle Finger 2',
+            native: 'Środkowy 2',
             min: validate_fingers.others.min.part_2,
             max: validate_fingers.others.max.part_2,
             refDict: IK_srodkowy_2_R,

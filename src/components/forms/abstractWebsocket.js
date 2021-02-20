@@ -15,21 +15,31 @@ const ProgressBar = () => {
     } = useSelector( renderWebsocketSelector )
 
     return (
-        <div style={ { width: '300px', height: '20px' } }>
-            <div style={ { width: '100%', height: '100%', marginBottom: '-20px', textAlign: 'center' } }>
+        <div className="progress_bar_form">
+            <div>
                 {
                     typeof percents === 'number'
                     ? 'Progress: ' + percents + '%'
-                    : percents
+                    : percents === 'render_success' || percents === 'Ready to work. Get params'
+                        ? percents
+                        : ''
                 }
             </div>
-            <div style={ { width: '100%', height: '100%', backgroundColor: 'white' } }>
+            <div>
                 {
                     typeof percents === 'number'
-                    ? <div style={ { width: percents + '%', height: '100%', backgroundColor: 'green' } }>
+                    ? <div 
+                          className='progerss_bar_progress' 
+                          style={ { width: percents + '%', height: '100%' } }
+                      >
                       </div>
-                    : <div style={ { width: '100%', height: '100%', backgroundColor: 'green' } }>
-                      </div>
+                    : percents === 'render success'
+                        ? <div 
+                              className='progerss_bar_progress'
+                              style={ { width: '100%', height: '100%' } }
+                          >
+                          </div>
+                        : <></>
                 }
             </div>
         </div>
@@ -160,70 +170,94 @@ const AbstractWebsocket = ({ addressWS, inputList, refList, bodyComparer }) => {
 
     return (
         <>
-            <FormGenerator 
-                inputList={ inputList }
-                refList={ refList }
-                action={ handleSendMessage }
-            />
-            <ProgressBar />
-            {
-                connected
-                ? 
+            <div 
+                className="float_form_render_async"
+                style={ 
+                    connected 
+                    ? addressWS === '/vector/single/set/' || addressWS === '/vector/single/image/'
+                        ? { marginTop: '10%', overflowY: 'scroll' }
+                        : { marginTop: '10%' } 
+                    : { marginTop: '100%' } 
+                }
+            >
+                <FormGenerator 
+                    inputList={ inputList }
+                    refList={ refList }
+                    action={ handleSendMessage }
+                />
+            </div>
+            <div className="float_form_connect">
+                <p>
+                    { addressWS }
+                </p>
+                <ProgressBar />
+                {
+                    connected
+                    ? 
                     <button onClick={ (event) => handleDisconnect(event) }>
-                        Disconnect
-                    </button>
-                :
+                            Disconnect
+                        </button>
+                    :
                     <button onClick={ (event) => handleConnect(event) }>
-                        Connect
-                    </button>
-            }
-            <div>
-            {
-                messages.map( (item) => {
-                        return (
-                            <div>
-                                <>
-                                    {
-                                        Object.keys(item).map( (key) => {
+                            Connect
+                        </button>
+                }
+            </div>
+            <div 
+                className="float_form_console"
+                style={ connected ? { marginTop: '25%', height: '200px' } : { marginTop: '15%', height: '10px' } }
+            >
+                <p>
+                    console:
+                </p>
+                <div className="console_data">
+                    {
+                        messages.slice(0).reverse().map( (item) => {
+                                return (
+                                    <div>
+                                        <>
+                                            {
+                                                Object.keys(item).map( (key) => {
 
-                                                if ( key == 'details' ) {
-                                                    return (
-                                                        <>
-                                                            {
-                                                                Object.keys(item[key]).map( (keyTwo) => {
-                                                                        return (
-                                                                            <div>
-                                                                                { '    ' + keyTwo + ': ' + item[key][keyTwo] + ' ' }
-                                                                            </div>
+                                                        if ( key == 'details' ) {
+                                                            return (
+                                                                <>
+                                                                    {
+                                                                        Object.keys(item[key]).map( (keyTwo) => {
+                                                                                return (
+                                                                                    <div>
+                                                                                        { '    ' + keyTwo + ': ' + item[key][keyTwo] + ' ' }
+                                                                                    </div>
+                                                                                )
+                                                                            }
                                                                         )
                                                                     }
-                                                                )
-                                                            }
-                                                        </>
-                                                    )
-                                                } else if ( key === 'image' ) {
-                                                    return (
-                                                        <img 
-                                                            src={ 'data:image/png;base64, ' + item[key] }
-                                                            style={ { width: '300px', height: '200px' } }
-                                                        />
-                                                    )
-                                                } else {
-                                                    return (
-                                                        <>
-                                                        { key + ': ' + item[key] + ' ' }
-                                                        </>
-                                                    )
-                                                }
-                                            } 
-                                        )
-                                    }
-                                </>
-                            </div>
+                                                                </>
+                                                            )
+                                                        } else if ( key === 'image' ) {
+                                                            return (
+                                                                <img 
+                                                                    src={ 'data:image/png;base64, ' + item[key] }
+                                                                    style={ { width: '300px', height: '200px' } }
+                                                                />
+                                                            )
+                                                        } else {
+                                                            return (
+                                                                <>
+                                                                { key + ': ' + item[key] + ' ' }
+                                                                </>
+                                                            )
+                                                        }
+                                                    } 
+                                                )
+                                            }
+                                        </>
+                                    </div>
+                                )
+                            }
                         )
                     }
-                )
-            }
+                </div>
             </div>
         </>
     )
