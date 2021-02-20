@@ -53,7 +53,7 @@ const ModelShowAndDownloadForm = () => {
     return (
         <div 
             className="float_form_model"
-            style={ { marginTop: '10%' } }
+            style={ { marginTop: '10%' , overflowY: 'scroll', height: '500px' } }
         >
             <FormGenerator 
                 inputList={ inputList }

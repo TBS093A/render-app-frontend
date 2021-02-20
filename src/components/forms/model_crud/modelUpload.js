@@ -49,7 +49,7 @@ const ModelUploadForm = () => {
     return (
         <div 
             className="float_form_model"
-            style={ { marginTop: '17%' } }
+            style={ { marginTop: '17%'} }
         >
             <FormGenerator 
                 inputList={ inputList }

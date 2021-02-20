@@ -54,7 +54,7 @@ const GeneralView = () => {
     }
 
     return (
-        <>
+        <div>
             <NavigationBar 
                 movements={ movements }
             />
@@ -67,34 +67,23 @@ const GeneralView = () => {
             <RenderIndex 
                 movement={ movements.render_view.renderView }
             />
-            {/* <RenderWebsocketIndex 
-                movement={ movements.render_view.renderView }
-            /> */}
-        </>
+        </div>
     )
 }
 
-const __verifyUserSession = (token, user)  => {
-
-    if ( user.id !== 0 && user.username !== '' && user.email !== '' && token !== '' )
-        return true
-    else
-        return false
-    
-}
 
 const VerifyUserSession = () => {
     
     const { token, user } = useSelector(userAuthSelector)
 
     return (
-        <>
+        <div>
             {
-                __verifyUserSession(token, user) 
+                user.id !== 0 && token !== ''
                 ? <GeneralView />  
                 : <UserAuthIndex /> 
             }
-        </>
+        </div>
     )
 }
 

@@ -13,7 +13,15 @@ const userAuthSlice = createSlice(
             },
             info: ''
         },
-        reducers: {},
+        reducers: {
+            deleteUser(state) {
+                state.token = ''
+                state.user.id = 0
+                state.user.username = ''
+                state.user.email = ''
+                state.info = 'user has been deleted'
+            }
+        },
         extraReducers: {
             [userAuthAsyncThunk.fetchLogin.fulfilled.type]: (state, action) => {
                 try {
@@ -38,5 +46,7 @@ const userAuthSlice = createSlice(
 )
 
 export const userAuthReducer = userAuthSlice.reducer
+
+export const { deleteUser } = userAuthSlice.actions
 
 export const userAuthSelector = state => state.userAuthReducer
