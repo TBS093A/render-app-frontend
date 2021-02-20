@@ -51,13 +51,13 @@ const RenderShowAndDownloadForm = () => {
     }
 
     return (
-        <>
+        <div className='float_form_render_sync'>
             <FormGenerator 
                 inputList={ inputList }
                 refList={ [] }
                 action={ handleRefresh }
             />
-        </>
+        </div>
     )
 
 }

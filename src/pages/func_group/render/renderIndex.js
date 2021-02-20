@@ -7,6 +7,7 @@ import RenderSingleSetForm from '../../../components/forms/render_websocket/rend
 import RenderAllForm from '../../../components/forms/render_websocket/renderAll'
 
 import RenderVectorSingleImageForm from '../../../components/forms/render_websocket/renderVectorImage'
+import RenderVectorSingleSetForm from '../../../components/forms/render_websocket/renderVectorSet'
 
 
 const __handleSwap = (name, movement) => {
@@ -55,6 +56,9 @@ const RenderIndex = ( movement ) => {
             </div>
             <div style={ __handleSwap( 'render_image_by_vector', movement ) }>
                 <RenderVectorSingleImageForm />
+            </div>
+            <div style={ __handleSwap( 'render_set_by_vector', movement ) }>
+                <RenderVectorSingleSetForm />
             </div>
         </div>
     )

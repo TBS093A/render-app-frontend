@@ -32,7 +32,7 @@ const __setShowGeneral = ( view, key, movements ) => {
     }
 
     if (view === 'user_view') {
-        let new_move = movements.user_view.userCrudView
+        let new_move = user_default
         new_move[key] = true
         movements.user_view.setUserCrudView( 
             new_move
@@ -45,7 +45,7 @@ const __setShowGeneral = ( view, key, movements ) => {
         )
     } else if (view === 'model_view') {
         
-        let new_move = movements.model_view.modelCrudView
+        let new_move = model_default
         new_move[key] = true
         movements.model_view.setModelCrudView( 
             new_move
@@ -57,7 +57,7 @@ const __setShowGeneral = ( view, key, movements ) => {
             render_default
         )
     } else if (view === 'render_view') {
-        let new_move = movements.render_view.renderView
+        let new_move = render_default
         if ( key in new_move ) {
             new_move[key] = true
             movements.render_view.setRenderView( 
@@ -115,6 +115,8 @@ const NavigationBar = ({ movements }) => {
     const [showModels, setShowModels] = useState(false)
     const [showRender, setShowRender] = useState(false)
     const [showRenderFunc, setShowRenderFunc] = useState(false)
+
+    const [clickHide, setClickHide] = useState(true)
     
     const logout = async () => {
         dispatch(
@@ -125,83 +127,135 @@ const NavigationBar = ({ movements }) => {
     }
 
     return(
-        <>
-            <div>
+        <div 
+            className="navigation_bar"
+            style={ clickHide ? { marginRight: '-350px' } : { marginRight: '0px' } }
+        >
+            <div 
+                onClick={ () => setClickHide( !clickHide ) }
+                className="nav_bar_clickable"
+            >
+            </div> 
+            <div className="nav_bar_general">
                 Menu
                 <div>
-                    <div onClick={ () => setShowAccount( !showAccount ) }>
-                    ├── Account Settings
+                    <div 
+                        onClick={ () => setShowAccount( !showAccount ) }
+                        className='nav_bar_header'
+                    >
+                        <pre>  ├── </pre> <p> Account Settings </p>
                     </div>
                     <div style={ __styleChanger( showAccount) }>
                         <div>
-                            │   ├── User info
+                            <div className='nav_bar_option'>
+                                <pre>  │   ├── </pre> <p> User info </p>
+                            </div>
                             <div>
-                                <div>
-                                    │   │   ├── Username: { user_get.username } 
+                                <div className='nav_bar_option'>
+                                    <pre>  │   │   ├── </pre> <p>Username: { user_get.username } </p>
                                 </div>
-                                <div>
-                                    │   │   └── E-mail: { user_get.email }
+                                <div className='nav_bar_option'>
+                                    <pre>  │   │   └── </pre> <p> E-mail: { user_get.email } </p>
                                 </div>
                             </div>
                         </div>
-                        <div onClick={ () => __setShowGeneral( 'user_view', 'update_user', movements ) }>
-                            │   ├── Update User
+                        <div 
+                            onClick={ () => __setShowGeneral( 'user_view', 'update_user', movements ) } 
+                            className='nav_bar_option'
+                        >
+                            <pre>  │   ├── </pre> <p> Update User </p>
                         </div>
-                        <div onClick={ () => __setShowGeneral( 'user_view', 'delete_user', movements ) }>
-                            │   └── Delete User
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div onClick={ () => setShowModels( !showModels ) }>
-                    ├── Models
-                    </div>
-                    <div style={ __styleChanger( showModels ) }>
-                        <div onClick={ () => __setShowGeneral( 'model_view', 'show_models_and_download', movements )}>
-                            │   ├── Show Models & Download
-                        </div>
-                        <div onClick={ () => __setShowGeneral( 'model_view', 'upload_model', movements ) }>
-                            │   └── Upload Model
+                        <div 
+                            onClick={ () => __setShowGeneral( 'user_view', 'delete_user', movements ) } 
+                            className='nav_bar_option'
+                        >
+                            <pre>  │   └── </pre> <p> Delete User </p>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <div onClick={ () => setShowRender( !showRender ) }>
-                    ├── Render
+                    <div 
+                        onClick={ () => setShowModels( !showModels ) }
+                        className='nav_bar_header'
+                    >
+                        <pre>  ├── </pre><p>Models</p>
+                    </div>
+                    <div style={ __styleChanger( showModels ) } className='nav_bar_option'>
+                        <div 
+                            onClick={ () => __setShowGeneral( 'model_view', 'show_models_and_download', movements )}
+                            className='nav_bar_option'
+                        >
+                            <pre>  │   ├── </pre> <p> Show Models & Download</p>
+                        </div>
+                        <div 
+                            onClick={ () => __setShowGeneral( 'model_view', 'upload_model', movements ) }
+                            className='nav_bar_option'
+                        >
+                            <pre>  │   └── </pre> <p> Upload Model</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div 
+                        onClick={ () => setShowRender( !showRender ) } 
+                        className='nav_bar_header'
+                    >
+                        <pre>  ├── </pre> <p> Render </p>
                     </div>
                     <div style={ __styleChanger( showRender ) }>
-                        <div onClick={ () => __setShowGeneral( 'render_view', 'show_ready_renders_and_download', movements ) }>
-                            │   ├── Show Ready Renders & Download
-                        </div>
                         <div>
-                            <div onClick={ () => setShowRenderFunc( !showRenderFunc ) }>
-                            │   ├── Render Functionality
+                            <div 
+                                onClick={ () => setShowRenderFunc( !showRenderFunc ) } 
+                                className='nav_bar_option'
+                            >
+                                <pre>  │   ├── </pre> <p> Render Functionality </p>
                             </div>
                             <div style={ __styleChanger( showRenderFunc ) }>
-                                <div onClick={ () => __setShowGeneral( 'render_view', 'render_single_image', movements ) }>
-                                    │   │   ├── Render Single Image
+                                <div 
+                                    onClick={ () => __setShowGeneral( 'render_view', 'render_single_image', movements ) } 
+                                    className='nav_bar_option'
+                                >
+                                    <pre>  │   │   ├── </pre> <p> Render Single Image </p>
                                 </div>
-                                <div onClick={ () => __setShowGeneral( 'render_view', 'render_single_set', movements ) }>
-                                    │   │   ├── Render Single Set
+                                <div 
+                                    onClick={ () => __setShowGeneral( 'render_view', 'render_single_set', movements ) } 
+                                    className='nav_bar_option'
+                                >
+                                    <pre>  │   │   ├── </pre> <p> Render Single Set</p>
                                 </div>
-                                <div onClick={ () => __setShowGeneral( 'render_view', 'render_all', movements ) }>
-                                    │   │   ├── Render All Sets
+                                <div 
+                                    onClick={ () => __setShowGeneral( 'render_view', 'render_all', movements ) } 
+                                    className='nav_bar_option'
+                                >
+                                    <pre>  │   │   ├── </pre> <p> Render All Sets</p>
                                 </div>
-                                <div onClick={ () => __setShowGeneral( 'render_view', 'render_image_by_vector', movements ) }>
-                                    │   │   ├── Render Image By Vector
+                                <div 
+                                    onClick={ () => __setShowGeneral( 'render_view', 'render_image_by_vector', movements ) } 
+                                    className='nav_bar_option'
+                                >
+                                    <pre>  │   │   ├── </pre> <p> Render Image By Vector</p>
                                 </div>
-                                <div onClick={ () => __setShowGeneral( 'render_view', 'render_set_by_vector', movements ) }>
-                                    │   │   └── Render Set By Vector
+                                <div 
+                                    onClick={ () => __setShowGeneral( 'render_view', 'render_set_by_vector', movements ) } 
+                                    className='nav_bar_option'
+                                >
+                                    <pre>  │   │   └── </pre> <p> Render Set By Vector</p>
                                 </div>
                             </div>
+                        </div>
+                        <div 
+                            onClick={ () => __setShowGeneral( 'render_view', 'show_ready_renders_and_download', movements ) } 
+                            className='nav_bar_option'
+                        >
+                            <pre>  │   └── </pre> <p> Show Ready Renders & Download </p>
                         </div>
                     </div>
                 </div>
-                <div onClick={ () => logout() }>
-                    └── Sign Out
+                <div onClick={ () => logout() } className='nav_bar_header'>
+                    <pre>  └── </pre><p> Sign Out</p>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

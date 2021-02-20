@@ -16,7 +16,10 @@ const UserAuthIndex = () => {
     }
 
     return (
-        <div>
+        <div 
+            className="float_form_auth" 
+            style={ swapForm ? { height: '200px', marginTop: '15%' } : { height: '290px', marginTop: '13%' } } 
+        >
             {   swapForm
                 ? <UserLoginForm />
                 : <UserRegisterForm />

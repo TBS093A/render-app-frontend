@@ -59,7 +59,9 @@ const UserLoginForm = () => {
                 refList={ refList }
                 action={ login }
             />
-            { info }
+            <div className='form_info'>
+                { info }
+            </div>
         </>
     )
 

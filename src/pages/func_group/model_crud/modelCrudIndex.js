@@ -5,7 +5,7 @@ import ModelUpload from '../../../components/forms/model_crud/modelUpload'
 
 
 const __handleSwap = (name, movement) => {
-    
+
     let display = {
         display: 'block'
     }
@@ -27,15 +27,16 @@ const __handleSwap = (name, movement) => {
 
 const ModelCrudIndex = ( movement ) => {
 
+
     return (
-        <>
+        <div>
             <div style={ __handleSwap( 'show_models_and_download', movement ) }>
                 <ModelShowAndDownloadForm />
             </div>
             <div style={ __handleSwap( 'upload_model', movement ) }>
                 <ModelUpload />
             </div>
-        </>
+        </div>
     )
 }
 

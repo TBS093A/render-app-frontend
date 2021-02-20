@@ -51,13 +51,16 @@ const ModelShowAndDownloadForm = () => {
     }
 
     return (
-        <>
+        <div 
+            className="float_form_model"
+            style={ { marginTop: '10%' } }
+        >
             <FormGenerator 
                 inputList={ inputList }
                 refList={ [] }
                 action={ handleRefresh }
             />
-        </>
+        </div>
     )
 
 }
