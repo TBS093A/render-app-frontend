@@ -431,14 +431,14 @@ const RenderVectorSingleImageForm = () => {
     }
 
     return (
-        <>
+        <div>
             <AbstractWebsocket 
                 addressWS={ '/vector/single/image/' }
                 inputList={ inputList }
                 refList={ refList }
                 bodyComparer={ bodyComparer }
             />
-        </>
+        </div>
     )
 }
 
