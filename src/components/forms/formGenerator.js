@@ -233,7 +233,7 @@ const DownloadFilesListInputGenerator = ({
  * Text input generator, example:
  * @param {
  * {    
- *  type: 'drop-box',   
+ *  type: 'chice-listing',   
  *  name: 'name',
  *  values: list,
  *  ref: React.createRef()
@@ -249,30 +249,40 @@ const ChoiceListingGenerator = ({
     input, info
 }) => {
 
-    const __handleRef = ( item ) => {
+    const __handleRef = ( event ) => {
+        event.preventDefault()
         input.ref.current = {
-            value: item
+            value: event.target.value
         }
     }
 
     return (
         <div
-            id={input.name + info.action + info.endpoint + 'DropBox'}
+            id={input.name + info.action + info.endpoint + 'ChoiceListing'}
         >
             {input.name + ':'}
+            <select
+                onChange={ (event) => __handleRef( event ) }
+            >
+                <option
+                    value={ '--Select-Model--' }
+                >
+                    --Select-Model--
+                </option>
             {
                 input.values.map( (item) => {
                         return (
-                            <div
+                            <option
                                 key={ item }
-                                onClick={ () => __handleRef( item ) }
+                                value={ item }
                             >
-                                    { item }
-                            </div>
+                                    { item.replace('.blend', '') }
+                            </option>
                         )
                     }
                 )
             }
+            </select>
         </div>
     )
 }
@@ -482,7 +492,7 @@ const VectorInputGenerator = ({
                                         unit={ '' }
                                         min={input.min[key]}
                                         max={input.max[key]}
-                                        defaultValue={input.min[key]}
+                                        defaultValue={ input.min[key] > 0 ? input.min[key] : 0 }
                                         step={0.1}
                                         reference={input.refDict[key]}
                                     />

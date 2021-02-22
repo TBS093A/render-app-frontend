@@ -41,10 +41,18 @@ const renderWebsocketSlice = createSlice(
                     ...state.messages,
                     action.payload.message
                 ]
-                state.percents = action.payload.message.info
+                if (
+                    (
+                        !isNaN(action.payload.message.info) 
+                        && action.payload.message.info.toString().indexOf('.') != -1
+                    ) || action.payload.message.info === 'render success'
+                ) {
+                    state.percents = action.payload.message.info
+                }
             },
             resetMessages(state) {
                 state.messages = []
+                state.percents = ''
             },
             disconnect(state) {
                 state.web_socket_address = ''

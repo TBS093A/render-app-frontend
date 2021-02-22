@@ -34,7 +34,7 @@ const RenderAllForm = () => {
             button_value: 'Render All Sets'
         },
         {
-            type: 'chice-listing',
+            type: 'choice-listing',
             name: 'Models',
             values: models_list,
             ref: choiceListing
@@ -71,8 +71,8 @@ const RenderAllForm = () => {
 
     const bodyComparer = ( refs ) => {
         return {
-            // fileName: refs[0].current.value,
-            fileName: 'testHand',
+            fileName: refs[0].current.value.replace('.blend', ''),
+            // fileName: 'testHand',
             resolutionX: refs[1].current.value,
             resolutionY: refs[2].current.value,
         }
