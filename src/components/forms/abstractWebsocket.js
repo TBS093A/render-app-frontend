@@ -20,23 +20,22 @@ const ProgressBar = () => {
                 {
                     typeof percents === 'number'
                     ? 'Progress: ' + percents + '%'
-                    : percents === 'render_success' || percents === 'Ready to work. Get params'
-                        ? percents
-                        : ''
+                    : percents
                 }
             </div>
             <div>
                 {
-                    typeof percents === 'number'
+                    !isNaN(percents) 
+                    && percents.toString().indexOf('.') != -1
                     ? <div 
-                          className='progerss_bar_progress' 
-                          style={ { width: percents + '%', height: '100%' } }
+                          className='progress_bar_progress' 
+                          style={ { width: percents + '%', height: '100%', backgroundColor: 'green' } }
                       >
                       </div>
                     : percents === 'render success'
                         ? <div 
-                              className='progerss_bar_progress'
-                              style={ { width: '100%', height: '100%' } }
+                              className='progress_bar_progress'
+                              style={ { width: '100%', height: '100%', backgroundColor: 'green' } }
                           >
                           </div>
                         : <></>

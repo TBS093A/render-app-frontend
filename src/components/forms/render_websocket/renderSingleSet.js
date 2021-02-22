@@ -40,7 +40,7 @@ const RenderSingleSetForm = () => {
             button_value: 'Render Single Set'
         },
         {
-            type: 'chice-listing',
+            type: 'choice-listing',
             name: 'Models',
             values: models_list,
             ref: choiceListing
@@ -109,8 +109,8 @@ const RenderSingleSetForm = () => {
 
     const bodyComparer = ( refs ) => {
         return {
-            // fileName: refs[0].current.value,
-            fileName: 'testHand',
+            fileName: refs[0].current.value.replace('.blend', ''),
+            // fileName: 'testHand',
             setID: refs[1].current.value,
             cameraID: refs[2].current.value,
             resolutionX: refs[3].current.value,

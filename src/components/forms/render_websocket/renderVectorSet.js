@@ -178,7 +178,7 @@ const RenderVectorSingleSetForm = () => {
             button_value: 'Render Single Set'
         },
         {
-            type: 'chice-listing',
+            type: 'choice-listing',
             name: 'Models',
             values: models_list,
             ref: choiceListing
@@ -419,8 +419,8 @@ const RenderVectorSingleSetForm = () => {
         )
 
         return {
-            // fileName: refs[0].current.value,
-            fileName: 'testHand',
+            fileName: refs[0].current.value.replace('.blend', ''),
+            // fileName: 'testHand',
             angle: refs[1].current.value / 62, // on backend 0.1 - 6.2 value
             cameraID: refs[2].current.value,
             resolutionX: refs[3].current.value,
