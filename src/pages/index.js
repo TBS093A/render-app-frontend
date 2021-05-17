@@ -1,5 +1,4 @@
 import React from 'react';
-// import ReactDOM from 'react-dom';
 import '../styles/general.scss'
 
 import { Provider } from 'react-redux';
@@ -11,11 +10,17 @@ import Root from './func_group/root';
 // echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
 const IndexPage = () => {
-  return (
-    <Provider store={store}>
-      <Root />
-    </Provider>
-  )
+  if (typeof window !== `undefined` && store !== 0)
+    return (
+      <Provider store={ store }>
+        <Root />
+      </Provider>
+    )
+  else
+    return (
+      <>
+      </>
+    )
 }
 
 export default IndexPage

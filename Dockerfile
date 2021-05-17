@@ -1,12 +1,8 @@
-FROM node:14.4.0
+FROM nginx:1.19.0-alpine
 
-WORKDIR /usr/src/app
+COPY ./public /app/public
 
-COPY package*.json ./
-RUN npm install
+RUN mkdir -p /var/www/work_front/html && \
+    cp -r /app/public/* /var/www/work_front/html/
 
-COPY . .
-
-RUN npm install -g gatsby-cli
-
-CMD ['gatsby', 'develop', '-H', '0.0.0.0:8000']
+COPY ./default.conf /etc/nginx/conf.d/default.conf

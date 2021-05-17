@@ -56,6 +56,12 @@ const ModelUploadForm = () => {
                 refList={ [] }
                 action={ handleModelUpload }
             />
+            <p>
+                {   'info' in upload_blend_file_status 
+                    ? upload_blend_file_status.info
+                    : ''
+                }
+            </p>
         </div>
     )
 }
