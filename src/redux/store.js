@@ -10,33 +10,23 @@ import { userAuthReducer } from './slices/userAuthSlice'
 import { userCrudReducer } from './slices/userCrudSlice'
 
 
-let persistedState = null
+let persistedState = loadState()
 
-if (typeof window !== `undefined`) {
-    persistedState = loadState()
-}
+export const store = configureStore({
+    reducer: {
+        modelCrudReducer,
+        renderCrudReducer,
+        renderWebsocketReducer,
+        userAuthReducer,
+        userCrudReducer
+    },
+    preloadedState: persistedState
+})
 
-export const store = typeof window !== `undefined`
-    ? configureStore({
-        reducer: {
-            modelCrudReducer,
-            renderCrudReducer,
-            renderWebsocketReducer,
-            userAuthReducer,
-            userCrudReducer
-        },
-        preloadedState: persistedState
-    })
-    : 0
+store.subscribe(() => {
+    saveState(store.getState());
+});
 
-if (typeof window !== `undefined`) {
-
-    store.subscribe(() => {
-        saveState(store.getState());
-    });
-
-    store.subscribe(lodash.throttle(() => {
-        saveState(store.getState())
-    }, 100))
-
-}
+store.subscribe(lodash.throttle(() => {
+    saveState(store.getState())
+}, 100))
