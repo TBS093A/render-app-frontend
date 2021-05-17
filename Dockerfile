@@ -1,8 +1,18 @@
-FROM nginx:1.19.0-alpine
+# pull official base image
+FROM node:13.12.0-alpine
 
-COPY ./public /app/public
+# set working directory
+WORKDIR /app
 
-RUN mkdir -p /var/www/work_front/html && \
-    cp -r /app/public/* /var/www/work_front/html/
+# install app dependencies
 
-COPY ./default.conf /etc/nginx/conf.d/default.conf
+COPY package.json ./
+COPY package-lock.json ./
+
+RUN npm install --silent
+RUN npm install gatsby-cli --silent
+
+ENV GATSBY_TELEMETRY_DISABLED=1
+
+# add app
+COPY . ./
