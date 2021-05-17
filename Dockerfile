@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # pull official base image
 FROM node:13.12.0-alpine
 
@@ -35,3 +36,17 @@ CMD ["npm", "start"]
 # RUN npm install -g gatsby-cli
 
 # CMD ['gatsby', 'develop', '-H', '0.0.0.0:8000']
+=======
+FROM node:14.4.0
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+RUN npm install -g gatsby-cli
+
+CMD ['gatsby', 'develop', '-H', '0.0.0.0:8000']
+>>>>>>> feature/2_forms
