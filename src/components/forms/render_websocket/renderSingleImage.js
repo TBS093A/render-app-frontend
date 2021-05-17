@@ -121,14 +121,14 @@ const RenderSingleImageForm = () => {
     }
 
     return (
-        <>
+        <div>
             <AbstractWebsocket 
                 addressWS={ '/single/image/' }
                 inputList={ inputList }
                 refList={ refList }
                 bodyComparer={ bodyComparer }
             />
-        </>
+        </div>
     )
 }
 

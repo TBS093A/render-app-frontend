@@ -79,14 +79,14 @@ const RenderAllForm = () => {
     }
 
     return (
-        <>
+        <div>
             <AbstractWebsocket 
                 addressWS={ '/all/' }
                 inputList={ inputList }
                 refList={ refList }
                 bodyComparer={ bodyComparer }
             />
-        </>
+        </div>
     )
 }
 

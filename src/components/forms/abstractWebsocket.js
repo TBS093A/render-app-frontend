@@ -168,7 +168,7 @@ const AbstractWebsocket = ({ addressWS, inputList, refList, bodyComparer }) => {
     )
 
     return (
-        <>
+        <div>
             <div 
                 className="float_form_render_async"
                 style={ 
@@ -237,7 +237,7 @@ const AbstractWebsocket = ({ addressWS, inputList, refList, bodyComparer }) => {
                                                             return (
                                                                 <img 
                                                                     src={ 'data:image/png;base64, ' + item[key] }
-                                                                    style={ { width: '300px', height: '200px' } }
+                                                                    style={ { width: '300px', height: '150px' } }
                                                                 />
                                                             )
                                                         } else {
@@ -258,7 +258,7 @@ const AbstractWebsocket = ({ addressWS, inputList, refList, bodyComparer }) => {
                     }
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

@@ -53,7 +53,7 @@ const UserLoginForm = () => {
     }
 
     return (
-        <>
+        <div>
             <FormGenerator 
                 inputList={ inputList }
                 refList={ refList }
@@ -62,7 +62,7 @@ const UserLoginForm = () => {
             <div className='form_info'>
                 { info }
             </div>
-        </>
+        </div>
     )
 
 }

@@ -430,14 +430,14 @@ const RenderVectorSingleSetForm = () => {
     }
 
     return (
-        <>
+        <div>
             <AbstractWebsocket 
                 addressWS={ '/vector/single/set/' }
                 inputList={ inputList }
                 refList={ refList }
                 bodyComparer={ bodyComparer }
             />
-        </>
+        </div>
     )
 }
 

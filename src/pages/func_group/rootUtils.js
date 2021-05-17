@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import { userAuthSelector } from '../../redux/slices/userAuthSlice'
@@ -9,6 +9,7 @@ import ModelCrudIndex from './model_crud/modelCrudIndex'
 import RenderIndex from './render/renderIndex'
 
 import NavigationBar from './navigationBar'
+import CanvasBackgroundAnimation from './canvasBackgroundAnimation'
 
 
 const GeneralView = () => {
@@ -76,13 +77,26 @@ const VerifyUserSession = () => {
     
     const { token, user } = useSelector(userAuthSelector)
 
+    const [showGeneral, setShowGeneral] = useState(false)
+
+    useEffect(
+        () => {
+            if ( user.id > 0 && token !== '' && showGeneral === false ) {
+                setShowGeneral(true)
+            } else if ( user.id <= 0 && token === '' && showGeneral === true ) {
+                setShowGeneral(false)
+            }
+        }
+    )
+
     return (
         <div>
             {
-                user.id !== 0 && token !== ''
+                showGeneral
                 ? <GeneralView />  
-                : <UserAuthIndex /> 
+                : <UserAuthIndex />
             }
+            <CanvasBackgroundAnimation />
         </div>
     )
 }

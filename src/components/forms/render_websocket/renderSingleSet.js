@@ -120,14 +120,14 @@ const RenderSingleSetForm = () => {
     }
 
     return (
-        <>
+        <div>
             <AbstractWebsocket 
                 addressWS={ '/single/set/' }
                 inputList={ inputList }
                 refList={ refList }
                 bodyComparer={ bodyComparer }
             />
-        </>
+        </div>
     )
 }
 
