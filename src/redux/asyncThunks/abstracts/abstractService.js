@@ -80,7 +80,7 @@ const headerBuilder = (url, method, token, body) => {
         'authorization': token,
         'x-csrftoken': getCookie('csrftoken'),
         'accept': 'application/json',
-        'content-type': 'application/json',
+        'content-type': 'application/json'
     }
     let headers = {
         url: url,
@@ -90,7 +90,7 @@ const headerBuilder = (url, method, token, body) => {
     }
     if (method === 'PUT' || method === 'POST' || method === 'PATCH') {
         headers = Object.assign({}, headers, {
-            data: JSON.stringify(body),
+            data: JSON.stringify(body)
         })
     }
     return headers
