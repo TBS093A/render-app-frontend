@@ -57,9 +57,12 @@ const ModelUploadForm = () => {
                 action={ handleModelUpload }
             />
             <p>
-                {   'info' in upload_blend_file_status 
-                    ? upload_blend_file_status.info
-                    : ''
+                {   
+                    typeof upload_blend_file_status === 'string'
+                    ? ''
+                    : 'info' in upload_blend_file_status 
+                        ? upload_blend_file_status.info
+                        : ''
                 }
             </p>
         </div>

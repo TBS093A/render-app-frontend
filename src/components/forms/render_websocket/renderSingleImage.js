@@ -112,11 +112,12 @@ const RenderSingleImageForm = () => {
         return {
             fileName: refs[0].current.value.replace('.blend', ''),
             // fileName: 'testHand',
-            rotate: refs[1].current.value / 62, // on backend 0.1 - 6.2 value
-            cameraID: refs[2].current.value,
+            setID: refs[1].current.value,
+            rotate: refs[2].current.value / 62, // on backend 0.1 - 6.2 value
+            cameraID: refs[3].current.value,
             nameSeries: 0,
-            resolutionX: refs[3].current.value,
-            resolutionY: refs[4].current.value
+            resolutionX: refs[4].current.value,
+            resolutionY: refs[5].current.value
         }
     }
 
