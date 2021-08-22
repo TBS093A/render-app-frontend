@@ -208,20 +208,68 @@ const DownloadFilesListInputGenerator = ({
             id={input.name + info.action + info.endpoint + 'DropBox'}
         >
             {input.name + ':'}
-            {
+            {   
+                input.values.length == 0 ? 
+                
+                () => {
+                        return (
+                            <div>
+                                empty
+                            </div>
+                        )
+                } 
+                
+                :
+
                 input.values.map( (item, index) => {
 
                         return (
-                            <div
-                                key={ item }
-                            >
-                                <a 
-                                    href={ input.link + index + '/' }
+                            <>
+                                <div
+                                    key={ info.action + '_element_' + index }
                                 >
-                                    { item }
-                                </a>
-                            </div>
+                                    {
+                                        Object.keys(item).map(
+                                            ( key, index ) => {
+
+                                                return(
+                                                    <div style={{ paddingLeft: '10px' }}> 
+                                                        { key + ': ' }
+                                                        {
+                                                            typeof item[key] === "object" 
+                                                            ?
+                                                            
+                                                            Object.keys( item[key] ).map(
+                                                                ( key, index ) => {
+                                                                    return (
+                                                                        <div style={{ paddingLeft: '20px' }}>
+                                                                            { key }: { item.data[key]}
+                                                                        </div>
+                                                                    )
+                                                                }
+                                                            )
+                                                            
+                                                            :
+                                                            
+                                                            item[key]
+                                                        }
+                                                    </div>
+                                                
+                                                )
+                                            }
+                                    )
+                                    }
+                                    <a 
+                                        href={ input.link + index + '/' }
+                                    >
+                                        download
+                                    </a>
+                                </div>
+                                <div style={{ width: '100%', height: '1px', backgroundColor: '#008000' }}>
+                                </div>
+                            </>
                         )
+
                     }
                 )
             }

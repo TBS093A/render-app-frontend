@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 
 import { loadState, saveState } from './stateLoader'
 import lodash from 'lodash'
@@ -20,7 +20,12 @@ export const store = configureStore({
         userAuthReducer,
         userCrudReducer
     },
-    preloadedState: persistedState
+    preloadedState: persistedState,
+    middleware: getDefaultMiddleware (
+        { 
+            serializableCheck: false, 
+        }
+    ),
 })
 
 store.subscribe(() => {

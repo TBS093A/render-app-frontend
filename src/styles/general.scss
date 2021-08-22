@@ -2,11 +2,15 @@
 body {
     margin: 0 auto;
     overflow: hidden;
-    // background-color: rgba(0,128,0,1);
     background: 
-        url("../images/background.jpg")
-        rgba(0,128,0,1) 100%;
-    background-size: 100% auto;
+        linear-gradient(
+            10deg, 
+            black 0%, 
+            #0a670a 40%, 
+            #097309 50%, 
+            #0a670a 60%, 
+            black 100%
+        );
     width: 100%;
     height: 100%;
 
