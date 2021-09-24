@@ -183,6 +183,31 @@ const PasswordInputGenerator = ({
     )
 }
 
+const ObjectIterator = ({
+    object, divPlacer
+}) => {
+    return(
+        <>
+            {
+                typeof object == "object" ?
+                
+                    Object.keys( object ).map(
+                        ( key ) => {
+                            return (
+                                <div key={ key }>
+                                    { divPlacer( object[key] ) }
+                                </div>
+                            )
+                        }
+                    )
+                :
+
+                    object
+            }
+        </>
+    )
+}
+
 /**
  * Text input generator, example:
  * @param {
@@ -219,46 +244,71 @@ const DownloadFilesListInputGenerator = ({
                         )
                 } 
                 
-                :
-
-                input.values.map( (item, index) => {
+                : input.values.map( (item, index) => {
 
                         return (
                             <>
                                 <div
                                     key={ info.action + '_element_' + index }
+                                    ls={ item }
                                 >
                                     {
-                                        Object.keys(item).map(
+                                        typeof item == 'string' ?
+
+                                            item 
+
+                                        : Object.keys(item).map(
                                             ( key, index ) => {
 
                                                 return(
                                                     <div style={{ paddingLeft: '10px' }}> 
                                                         { key + ': ' }
                                                         {
-                                                            typeof item[key] === "object" 
-                                                            ?
+                                                            typeof item[key] === "object" ?
                                                             
-                                                            Object.keys( item[key] ).map(
-                                                                ( key, index ) => {
-                                                                    return (
-                                                                        <div style={{ paddingLeft: '20px' }}>
-                                                                            { key }: { item.data[key]}
-                                                                        </div>
-                                                                    )
-                                                                }
-                                                            )
+                                                                Object.keys( item[key] ).map(
+                                                                    ( key_two, index ) => {
+                                                                        return (
+                                                                            <div style={{ paddingLeft: '20px' }}>
+                                                                                { key_two + ': '}
+                                                                                {
+                                                                                    typeof item[key][key_two] == 'object' ?
+                                                                                    
+                                                                                        Object.keys( item[key][key_two] ).map(
+                                                                                            (key_three, index) => {
+                                                                                                return (
+                                                                                                    <div style={{ paddingLeft: '30px' }}>
+                                                                                                        { key_three + ": " } 
+                                                                                                            { "x: " + item[key][key_two][key_three].x + ", " }
+                                                                                                            { "y: " + item[key][key_two][key_three].y + ", " }
+                                                                                                            { "z: " + item[key][key_two][key_three].z + ", " }
+                                                                                                    </div>
+                                                                                                )
+                                                                                            }
+                                                                                        )
+                                                                                    
+                                                                                    :
+                                                                                        
+                                                                                        item[key][key_two]
+                                                                                }
+
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                )
                                                             
                                                             :
                                                             
-                                                            item[key]
+                                                                item[key] 
                                                         }
                                                     </div>
                                                 
                                                 )
                                             }
-                                    )
+                                        )
                                     }
+                                    <br />
+                                    <br />
                                     <a 
                                         href={ input.link + index + '/' }
                                     >
@@ -321,10 +371,10 @@ const ChoiceListingGenerator = ({
                 input.values.map( (item) => {
                         return (
                             <option
-                                key={ item }
-                                value={ item }
+                                key={ item.model }
+                                value={ item.model }
                             >
-                                    { item.replace('.blend', '') }
+                                    { item.model.replace('.blend', '') }
                             </option>
                         )
                     }

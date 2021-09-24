@@ -10,7 +10,7 @@ COPY package.json ./
 COPY package-lock.json ./
 
 RUN npm install --silent
-RUN npm install gatsby-cli --silent
+RUN npm install gatsby-cli@3.10.0 --silent
 
 ENV GATSBY_TELEMETRY_DISABLED=1
 
