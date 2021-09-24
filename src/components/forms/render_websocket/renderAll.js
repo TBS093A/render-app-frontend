@@ -14,14 +14,17 @@ const RenderAllForm = () => {
     const dispatch = useDispatch()
 
     const choiceListing = React.createRef()
+    const rotateRange = React.createRef()
     const resolutionXRange = React.createRef()
     const resolutionYRange = React.createRef()
+
 
     const { models_list } = useSelector( modelCrudSelector )
     const { user, token } = useSelector( userAuthSelector )
 
     let refList = [
         choiceListing,
+        rotateRange,
         resolutionXRange,
         resolutionYRange,
     ]
@@ -38,6 +41,15 @@ const RenderAllForm = () => {
             name: 'Models',
             values: models_list,
             ref: choiceListing
+        },
+        {
+            type: 'range',
+            name: 'Rotate',
+            min: 1,
+            max: 360,
+            step: 1,
+            unit: 'deg',
+            ref: rotateRange
         },
         {
             type: 'range',
@@ -73,8 +85,9 @@ const RenderAllForm = () => {
         return {
             fileName: refs[0].current.value.replace('.blend', ''),
             // fileName: 'testHand',
-            resolutionX: refs[1].current.value,
-            resolutionY: refs[2].current.value,
+            angle: refs[1].current.value / 62, // on backend 0.1 - 6.2 value
+            resolutionX: refs[2].current.value,
+            resolutionY: refs[3].current.value,
         }
     }
 
