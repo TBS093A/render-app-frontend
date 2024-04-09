@@ -1,0 +1,103 @@
+// Define common variables
+$background-base: rgba(51,54,51,1);
+$header-background: 0;
+$form-background: rgba(0,0,0,0.5);
+$header-color: white;
+$button-background: green;
+$border-color: green;
+$input-background: #222;
+$font-family-default: neue-haas-unica, sans-serif;
+$login-form-font-color: #a6a6a6;
+
+body, html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  font-family: $font-family-default;
+  font-weight: 680;
+  tab-size: 4;
+  background: $background-base;
+  color: white;
+  display: flex;
+  justify-content: center; // Center horizontally
+  align-items: center; // Center vertically
+}
+
+.header {
+  text-align: center;
+  padding: 20px;
+  background: $header-background;
+  color: $header-color;
+  z-index: 3; // Ensure the login form is above the cube
+  position: relative; // Required for z-index to take effect
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0%;
+  border-radius: 5px;
+
+  .main-content {
+    //flex: 1;
+    //display: flex;
+    margin-top: 0%;
+    align-items: center;
+    justify-content: space-evenly;
+
+    .login-form {
+      background: $form-background;
+      padding: 50px;
+      width: 350px;
+      color: $login-form-font-color;
+      // border: 2px solid $border-color;
+      border-radius: 10px;
+
+      margin-top: -400px;
+      margin-right: auto;
+      margin-left: auto;
+
+      z-index: 2; // Ensure the login form is above the cube
+      position: relative; // Required for z-index to take effect
+
+      .form-field {
+        margin-bottom: 15px;
+
+        label {
+          display: block;
+          margin-bottom: 15px;
+        }
+
+        input {
+          width: 90%;
+          padding: 5%;
+          background: $input-background;
+          border: 1px solid $border-color;
+          border-radius: 5px;
+          color: white;
+        }
+      }
+
+      button {
+        padding: 5%;
+        width: 100%;
+        margin-top: 30px;
+        border-radius: 5px;
+        background: $button-background;
+        font-family: $font-family-default;
+        font-weight: 800;
+        color: rgba(0,0,0,0.5);
+        border: none;
+        cursor: pointer;
+      }
+    }
+
+    .graphic-container {
+      width: 400px;
+      height: 400px;
+      margin-right: auto;
+      margin-left: auto;
+      z-index: 1; // Lower z-index than the login form to place it behind
+    }
+  }
+}
