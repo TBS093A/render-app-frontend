@@ -1,5 +1,6 @@
 // Define common variables
-$background-base: rgba(51,54,51,1);
+$background-base-start: rgb(51,54,51, 1);
+$background-base-end: rgba(0, 90, 25, 1);
 $header-background: 0;
 $form-background: rgba(0,0,0,0.5);
 $header-color: white;
@@ -16,7 +17,7 @@ body, html {
   font-family: $font-family-default;
   font-weight: 680;
   tab-size: 4;
-  background: $background-base;
+  background: radial-gradient($background-base-start 70%, $background-base-end);
   color: white;
   display: flex;
   justify-content: center; // Center horizontally
