@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY . ./
 
-RUN npm install npm@latest && \
-        npm install --silent
+RUN npm install --silent --force
 
 CMD ["npm", "run", "build"]
