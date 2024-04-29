@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 
-import { useSelector, useDispatch } from 'react-redux'
+// import { useSelector, useDispatch } from 'react-redux'
 
-import { userAuthSelector } from '../../../redux/slices/userAuthSlice'
-import userAuthAsyncThunk from '../../../redux/asyncThunks/userAuthAsyncThunk'
+// import { userAuthSelector } from '../../../redux/slices/userAuthSlice'
+// import userAuthAsyncThunk from '../../../redux/asyncThunks/userAuthAsyncThunk'
 
 import FormGenerator from '../formGenerator'
 
@@ -13,8 +13,9 @@ const UserLoginForm = () => {
     const usernameInput = React.createRef()
     const passwordInput = React.createRef()
 
-    const dispatch = useDispatch()
-    const { info } = useSelector( userAuthSelector )
+    // const dispatch = useDispatch()
+    // const { info } = useSelector( userAuthSelector )
+    const info = ""
 
     let refList = [
         usernameInput,
@@ -25,17 +26,17 @@ const UserLoginForm = () => {
         {
             type: 'info',
             action: 'Create',
-            endpint: 'user/auth/login',
-            button_value: 'Sign In'
+            endpint: 'user/auth',
+            button_value: 'CONTINUE'
         },
         {
             type: 'text',
-            name: 'Username',
+            name: 'EMAIL',
             ref: usernameInput
         },
         {
             type: 'password',
-            name: 'Password',
+            name: 'PASSWORD',
             ref: passwordInput
         }
     ]
@@ -45,16 +46,16 @@ const UserLoginForm = () => {
             username: refs[0].current.value,
             password: refs[1].current.value
         }
-        dispatch(
-            userAuthAsyncThunk.fetchLogin(
-                pass
-            )
-        )
+        // dispatch(
+        //     userAuthAsyncThunk.fetchLogin(
+        //         pass
+        //     )
+        // )
     }
 
     return (
         <div>
-            <FormGenerator 
+            <FormGenerator
                 inputList={ inputList }
                 refList={ refList }
                 action={ login }

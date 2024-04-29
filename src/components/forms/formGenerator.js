@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 /**
- * 
+ *
  * @param { [ {}, {}, ...{} ] } inputList - list of dicts with info about input
  * @param { [] } refList - react ref objects list for handler validation
  * @param { } action - fetch method
@@ -16,7 +16,7 @@ export const FormGenerator = ({
 
         if ( inputList[0].action === 'Async' ) {
             await action(refList)
-        } else if ( 
+        } else if (
              inputList[0].action === 'Download'
              || inputList[0].action === 'Upload'
         ) {
@@ -55,7 +55,7 @@ export const FormGenerator = ({
                         )
                     } else if (input.type === 'password') {
                         return (
-                            <PasswordInputGenerator 
+                            <PasswordInputGenerator
                                 input={input}
                                 info={info}
                                 key={key}
@@ -63,7 +63,7 @@ export const FormGenerator = ({
                         )
                     } else if (input.type === 'links-listing') {
                         return (
-                            <DownloadFilesListInputGenerator 
+                            <DownloadFilesListInputGenerator
                                 input={input}
                                 info={info}
                                 key={key}
@@ -79,7 +79,7 @@ export const FormGenerator = ({
                         )
                     } else if (input.type === 'choice-listing') {
                         return (
-                            <ChoiceListingGenerator 
+                            <ChoiceListingGenerator
                                 input={input}
                                 info={info}
                                 key={key}
@@ -87,7 +87,7 @@ export const FormGenerator = ({
                         )
                     } else if (input.type === 'range') {
                         return (
-                            <RangeInputGenerator 
+                            <RangeInputGenerator
                                 input={input}
                                 info={info}
                                 key={key}
@@ -107,13 +107,13 @@ export const FormGenerator = ({
             {
                 info.button_value === ''
                 ? <></>
-                : <button 
+                : <button
                       type='submit'
                   >
                       { info.button_value }
                   </button>
             }
-            
+
         </form>
     )
 }
@@ -121,11 +121,11 @@ export const FormGenerator = ({
 /**
  * Text input generator, example:
  * @param {
- * {    
- *  type: 'text',   
- *  name: 'name',       
- *  ref: React.createRef()  
- * }    } input - basic text input 
+ * {
+ *  type: 'text',
+ *  name: 'name',
+ *  ref: React.createRef()
+ * }    } input - basic text input
  * @param {
  * {
  *  type: 'info',
@@ -137,10 +137,10 @@ const TextInputGenerator = ({
     input, info
 }) => {
     return (
-        <div className="input_generate">
-            <div className="input_labels">
-                {input.name + ':'}
-            </div>
+        <div className="form-field">
+            <label>
+                {input.name}
+            </label>
             <input
                 id={input.name + info.action + info.endpoint + 'Input'}
                 autoComplete='off'
@@ -153,11 +153,11 @@ const TextInputGenerator = ({
 /**
  * Text input generator, example:
  * @param {
- * {    
- *  type: 'password',   
- *  name: 'name',       
- *  ref: React.createRef()  
- * }    } input - basic text input 
+ * {
+ *  type: 'password',
+ *  name: 'name',
+ *  ref: React.createRef()
+ * }    } input - basic text input
  * @param {
  * {
  *  type: 'info',
@@ -169,10 +169,10 @@ const PasswordInputGenerator = ({
     input, info
 }) => {
     return (
-        <div className="input_generate">
-            <div className="input_labels">
-                {input.name + ':'}
-            </div>
+        <div className="form-field">
+            <label>
+                {input.name}
+            </label>
             <input
                 id={input.name + info.action + info.endpoint + 'Input'}
                 autoComplete='off'
@@ -190,7 +190,7 @@ const ObjectIterator = ({
         <>
             {
                 typeof object == "object" ?
-                
+
                     Object.keys( object ).map(
                         ( key ) => {
                             return (
@@ -211,12 +211,12 @@ const ObjectIterator = ({
 /**
  * Text input generator, example:
  * @param {
- * {    
- *  type: 'drop-box',   
+ * {
+ *  type: 'drop-box',
  *  name: 'name',
  *  values: list,
  *  link: link to the file
- * }    } input - basic text input 
+ * }    } input - basic text input
  * @param {
  * {
  *  type: 'info',
@@ -233,17 +233,17 @@ const DownloadFilesListInputGenerator = ({
             id={input.name + info.action + info.endpoint + 'DropBox'}
         >
             {input.name + ':'}
-            {   
-                input.values.length == 0 ? 
-                
+            {
+                input.values.length == 0 ?
+
                 () => {
                         return (
                             <div>
                                 empty
                             </div>
                         )
-                } 
-                
+                }
+
                 : input.values.map( (item, index) => {
 
                         return (
@@ -255,17 +255,17 @@ const DownloadFilesListInputGenerator = ({
                                     {
                                         typeof item == 'string' ?
 
-                                            item 
+                                            item
 
                                         : Object.keys(item).map(
                                             ( key, index ) => {
 
                                                 return(
-                                                    <div style={{ paddingLeft: '10px' }}> 
+                                                    <div style={{ paddingLeft: '10px' }}>
                                                         { key + ': ' }
                                                         {
                                                             typeof item[key] === "object" ?
-                                                            
+
                                                                 Object.keys( item[key] ).map(
                                                                     ( key_two, index ) => {
                                                                         return (
@@ -273,12 +273,12 @@ const DownloadFilesListInputGenerator = ({
                                                                                 { key_two + ': '}
                                                                                 {
                                                                                     typeof item[key][key_two] == 'object' ?
-                                                                                    
+
                                                                                         Object.keys( item[key][key_two] ).map(
                                                                                             (key_three, index) => {
                                                                                                 return (
                                                                                                     <div style={{ paddingLeft: '30px' }}>
-                                                                                                        { key_three + ": " } 
+                                                                                                        { key_three + ": " }
                                                                                                             { "x: " + item[key][key_two][key_three].x + ", " }
                                                                                                             { "y: " + item[key][key_two][key_three].y + ", " }
                                                                                                             { "z: " + item[key][key_two][key_three].z + ", " }
@@ -286,9 +286,9 @@ const DownloadFilesListInputGenerator = ({
                                                                                                 )
                                                                                             }
                                                                                         )
-                                                                                    
+
                                                                                     :
-                                                                                        
+
                                                                                         item[key][key_two]
                                                                                 }
 
@@ -296,20 +296,20 @@ const DownloadFilesListInputGenerator = ({
                                                                         )
                                                                     }
                                                                 )
-                                                            
+
                                                             :
-                                                            
-                                                                item[key] 
+
+                                                                item[key]
                                                         }
                                                     </div>
-                                                
+
                                                 )
                                             }
                                         )
                                     }
                                     <br />
                                     <br />
-                                    <a 
+                                    <a
                                         href={ input.link + index + '/' }
                                     >
                                         download
@@ -330,12 +330,12 @@ const DownloadFilesListInputGenerator = ({
 /**
  * Text input generator, example:
  * @param {
- * {    
- *  type: 'chice-listing',   
+ * {
+ *  type: 'chice-listing',
  *  name: 'name',
  *  values: list,
  *  ref: React.createRef()
- * }    } input - basic text input 
+ * }    } input - basic text input
  * @param {
  * {
  *  type: 'info',
@@ -388,14 +388,14 @@ const ChoiceListingGenerator = ({
 /**
  * Upload file input generator, example:
  * @param {
- * {    
- *  type: 'file',   
- *  name: 'name',   
- *  endpoint: 'Album',     
- *  fileType: 'image' or 'audio',       
- *  dropInfo: dropInfo, setDropInfo: setDropInfo(), #useState  
+ * {
+ *  type: 'file',
+ *  name: 'name',
+ *  endpoint: 'Album',
+ *  fileType: 'image' or 'audio',
+ *  dropInfo: dropInfo, setDropInfo: setDropInfo(), #useState
  *  file: file, setFile: setFile()  #useState
- * }    } input -  
+ * }    } input -
  */
 const UploadInputGenerator = ({
     input, info
@@ -456,15 +456,15 @@ const UploadInputGenerator = ({
 /**
  * Text input generator, example:
  * @param {
- * {    
- *  type: 'range',   
+ * {
+ *  type: 'range',
  *  name: 'name',
  *  min: min range value,
  *  max: max range value,
  *  step: step of value,
- *  unit: unit of range value,       
- *  ref: React.createRef()  
- * }    } input - basic text input 
+ *  unit: unit of range value,
+ *  ref: React.createRef()
+ * }    } input - basic text input
  * @param {
  * {
  *  type: 'info',
@@ -501,7 +501,7 @@ const RangeInputGenerator = ({
     )
 }
 
-const RangeGenerator = ({ 
+const RangeGenerator = ({
     key,
     label,
     labelStyle,
@@ -547,16 +547,16 @@ const RangeGenerator = ({
 /**
  * Text input generator, example:
  * @param {
- * {    
- *  type: 'vector',   
- *  name: 'name',     
- *  refDict: 
+ * {
+ *  type: 'vector',
+ *  name: 'name',
+ *  refDict:
  *  {
  *      x: React.createRef(),
  *      y: React.createRef(),
  *      z: React.createRef()
- *  }  
- * }    } input - basic text input 
+ *  }
+ * }    } input - basic text input
  * @param {
  * {
  *  type: 'info',
@@ -580,7 +580,7 @@ const VectorInputGenerator = ({
                             let name = input.name + key + info.action + info.endpoint + 'Input'
                             return (
                                 <div style={ { display: 'flex', width: '140px' } }>
-                                    <RangeGenerator 
+                                    <RangeGenerator
                                         key={key}
                                         label={key}
                                         labelStyle={ { width: '5px', marginTop: '15px' } }

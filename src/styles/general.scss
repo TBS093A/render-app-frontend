@@ -1,70 +1,108 @@
+$first-color: rgba(0, 90, 25, 1);
+$secondary-color: white;
+$third-color: #242b2f;
 
-body {
+$title-color: white;
+$subtitle-color: #a6a6a6;
+$marked-subtitle-color: $first-color;
+
+$background-color: #242b2f;
+$background-base-start: $first-color;
+$background-base-end: rgb(51,54,51, 1);
+$header-background: 0;
+$form-background: rgba(0,0,0,0.5);
+$header-color: $form-background;
+$button-background: $first-color;
+$border-color: $first-color;
+$input-background: #222;
+$font-family-default: neue-haas-unica, sans-serif;
+
+
+body, html {
     margin: 0 auto;
+    height: 100%;
     overflow: hidden;
-    background: 
-        linear-gradient(
-            10deg, 
-            black 0%, 
-            #0a670a 40%, 
-            #097309 50%, 
-            #0a670a 60%, 
-            black 100%
-        );
+    font-family: $font-family-default;
+    tab-size: 4;
+    background: $background-color;
+    //    linear-gradient(
+    //        10deg,
+    //        black 0%,
+    //        #0a670a 40%,
+    //        #097309 50%,
+    //        #0a670a 60%,
+    //        black 100%
+    //    );
     width: 100%;
     height: 100%;
 
-    input {
-        width: 200px;
-        height: 30px;
-        margin-left: 20px;
-        margin-top:10px;
-        margin-bottom: 5px;
-        // border: 0px;
-        // border-radius: 10px;
-        font-size: 12pt;
-        text-align: center;
-        color: rgba(111,108,106,1);
-        background-color: rgba(0,0,0,0);
-        border-bottom: 2px solid;
-        border-right: 0px;
-        border-top: 0px;
-        border-left: 0px;
-        border-color: green;
+  .header {
+    text-align: center;
+    padding: 20px;
+    background: $header-background;
+    color: $header-color;
+    z-index: 3; // Ensure the login form is above the cube
+    position: relative; // Required for z-index to take effect
 
-        transition-duration: 0.5s;
+    h1 {
+        font-size: 72px;
+    }
+  }
+
+  .landing {
+    text-align: center;
+    padding: 20px;
+    background: $header-background;
+    color: $title-color;
+    z-index: 3; // Ensure the login form is above the cube
+    position: relative; // Required for z-index to take effect
+
+    h1 {
+        font-size: 60px;
+        font-weight: 800;
+        color: $title-color;
     }
 
-    input:hover {
-        border-color: rgba(111,108,106,1);
+    h2 {
+        font-size: 60px;
+        font-weight: 700;
+        color: $title-color;
     }
 
-    input:active {
-        background-color: rgba(0,128,0,1);
+    p {
+        font-size: 20px;
+        font-weight: 400;
+        color: $subtitle-color;
     }
 
-    .input_generate {
-
+    span {
+        font-size: 20px;
+        font-weight: 400;
+        padding-left: 5px;
     }
+
+    .span-white {
+        color: $title-color;
+    }
+
+    .span-first-color {
+        color: $first-color;
+    }
+
 
     button {
-        height: 30px;
-        margin-left: 20px;
-        margin-top:10px;
-        margin-bottom: 5px;
-        // border: 0px;
-        border-radius: 10px;
-        font-size: 12pt;
-        text-align: center;
-        color: green;
-        background-color: rgba(0,0,0,0);
-        border: 2px solid;
-        border-color: green;
-
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-bottom: 30px;
-        padding-top: 12px;
+        margin-top: 35px;
+        margin-bottom: 35px;
+        padding-top: 20px;
+        padding: 25px;
+        border-radius: 5px;
+        background: $button-background;
+        font-size: 20px;
+        font-family: $font-family-default;
+        font-weight: 800;
+        color: rgba(0,0,0,0.5);
+        border: none;
+        cursor: pointer;
         transition-duration: 0.1s;
     }
 
@@ -72,6 +110,77 @@ body {
         background-color: green;
         color: black
     }
+  }
+
+  .main-content {
+    //flex: 1;
+    //display: flex;
+    margin-top: 0%;
+    align-items: center;
+    justify-content: space-evenly;
+
+    .form {
+      background: $form-background;
+      padding: 50px;
+      width: 350px;
+      color: $subtitle-color;
+      // border: 2px solid $border-color;
+      border-radius: 10px;
+
+      margin-top: -400px;
+      margin-right: auto;
+      margin-left: auto;
+
+      z-index: 2; // Ensure the login form is above the cube
+      position: relative; // Required for z-index to take effect
+
+      .form-field {
+        margin-bottom: 15px;
+
+        label {
+          display: block;
+          margin-bottom: 15px;
+        }
+
+        input {
+          width: 90%;
+          padding: 5%;
+          background: $input-background;
+          border: 1px solid $border-color;
+          border-radius: 5px;
+          color: white;
+          transition-duration: 0.5s;
+        }
+
+        input:hover {
+          border-color: rgba(111,108,106,1);
+        }
+
+        input:active {
+          background-color: rgba(0,128,0,1);
+        }
+      }
+
+      button {
+        padding: 5%;
+        width: 100%;
+        margin-top: 30px;
+        border-radius: 5px;
+        background: $button-background;
+        font-family: $font-family-default;
+        font-weight: 800;
+        color: rgba(0,0,0,0.5);
+        border: none;
+        cursor: pointer;
+        transition-duration: 0.1s;
+      }
+
+      button:hover {
+        background-color: green;
+        color: black
+      }
+    }
+  }
 }
 
 .navigation_bar {
@@ -122,7 +231,7 @@ body {
             width: 100%;
             display: flex;
         }
-}
+    }
 }
 
 .float_form_auth {
@@ -137,7 +246,6 @@ body {
     input {
         width: 75%;
         float: right;
-
     }
 
     .input_generate {
@@ -255,7 +363,7 @@ body {
     }
 
     button {
-        width: 100%; 
+        width: 100%;
         margin-top: 25px;
         margin-left: auto;
         margin-right: auto;
