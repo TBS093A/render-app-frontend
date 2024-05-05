@@ -109,6 +109,8 @@ export const FormGenerator = ({
                 ? <></>
                 : <button
                       type='submit'
+                      disabled={ info.allowButtonAction }
+                      className={ info.allowButtonAction === false ? "button-disabled" : "" }
                   >
                       { info.button_value }
                   </button>
@@ -145,7 +147,17 @@ const TextInputGenerator = ({
                 id={input.name + info.action + info.endpoint + 'Input'}
                 autoComplete='off'
                 ref={input.ref}
+                onChange={input.onChange}
+                className={ [ "Empty", "Success"].includes(input.validationInfo) ? "" : "input-incorrect" }
             />
+            <div
+                className="popup"
+                style={ [ "Empty", "Success"].includes(input.validationInfo) ? {"display": "none", "height": "0px"} : {"display": "block"} }
+            >
+                <div className="popup-content">
+                    { input.validationInfo }
+                </div>
+            </div>
         </div>
     )
 }
@@ -178,7 +190,17 @@ const PasswordInputGenerator = ({
                 autoComplete='off'
                 ref={input.ref}
                 type='password'
+                onChange={input.onChange}
+                className={ [ "Empty", "Success"].includes(input.validationInfo) ? "" : "input-incorrect" }
             />
+            <div
+                className="popup"
+                style={ [ "Empty", "Success"].includes(input.validationInfo) ? {"display": "none", "height": "0px"} : {"display": "block"} }
+            >
+                <div className="popup-content">
+                    { input.validationInfo }
+                </div>
+            </div>
         </div>
     )
 }

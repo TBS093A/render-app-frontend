@@ -1,9 +1,9 @@
 import React from 'react';
 
-import '../styles/LoginPage.cube.scss';
+import '../styles/large.cube.scss';
 
 
-const GraphicContainerComponent = () => {
+const LargeCubeComponent = () => {
     return (
         <div className="graphic-container">
             <div className="cube">
@@ -19,4 +19,4 @@ const GraphicContainerComponent = () => {
 }
 
 
-export default GraphicContainerComponent
+export default LargeCubeComponent

@@ -15,7 +15,7 @@ const UserLoginForm = () => {
 
     // const dispatch = useDispatch()
     // const { info } = useSelector( userAuthSelector )
-    const info = ""
+    const info = "" // if redux is integrated - delete this line
 
     let refList = [
         usernameInput,
