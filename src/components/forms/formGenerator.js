@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 
+import passwordVisibleImg from '../../images/password-visible.png'
+import passwordHiddenImg from '../../images/password-hidden.png'
+
 /**
  *
  * @param { [ {}, {}, ...{} ] } inputList - list of dicts with info about input
@@ -180,19 +183,29 @@ const TextInputGenerator = ({
 const PasswordInputGenerator = ({
     input, info
 }) => {
+
+    const [contentIsHidden, setContentIsHidden] = useState(true)
+
     return (
         <div className="form-field">
             <label>
-                {input.name}
+                { input.name }
             </label>
-            <input
-                id={input.name + info.action + info.endpoint + 'Input'}
-                autoComplete='off'
-                ref={input.ref}
-                type='password'
-                onChange={input.onChange}
-                className={ [ "Empty", "Success"].includes(input.validationInfo) ? "" : "input-incorrect" }
-            />
+            <div className="horizontal-container-input">
+                <input
+                    id={input.name + info.action + info.endpoint + 'Input'}
+                    autoComplete='off'
+                    ref={input.ref}
+                    type={ contentIsHidden ? 'password' : 'text' }
+                    onChange={input.onChange}
+                    className={ [ "Empty", "Success"].includes(input.validationInfo) ? "" : "input-incorrect" }
+                />
+                <img
+                    src={ contentIsHidden ? passwordHiddenImg : passwordVisibleImg }
+                    className={ [ "Empty", "Success"].includes(input.validationInfo) ? "" : "input-visible-incorrect" }
+                    onClick={ () => { setContentIsHidden(!contentIsHidden) } }
+                />
+            </div>
             <div
                 className="popup"
                 style={ [ "Empty", "Success"].includes(input.validationInfo) ? {"display": "none", "height": "0px"} : {"display": "block"} }
@@ -200,6 +213,7 @@ const PasswordInputGenerator = ({
                 <div className="popup-content">
                     { input.validationInfo }
                 </div>
+
             </div>
         </div>
     )

@@ -161,6 +161,7 @@ body, html {
     position: relative; // Required for z-index to take effect
 
     .form-field {
+      width: 100%;
       margin-bottom: 15px;
 
       label {
@@ -196,6 +197,28 @@ body, html {
       .input-incorrect {
           background: rgba(120,8,0,1);
           border: 1px solid red;
+      }
+
+      .horizontal-container-input {
+        display: block;
+
+        input {
+          width: 80%;
+        }
+
+        img {
+          float: right;
+          width: 20px;
+          height: 20px;
+          padding-top: 5%;
+          filter: invert(27%) sepia(97%) saturate(3498%) hue-rotate(97deg) brightness(98%) contrast(103%);
+        }
+
+        // convert hex to filter: https://codepen.io/sosuke/pen/Pjoqqp
+
+        .input-visible-incorrect {
+          filter: invert(8%) sepia(63%) saturate(4888%) hue-rotate(8deg) brightness(113%) contrast(112%);
+        }
       }
     }
 
