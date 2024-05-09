@@ -305,9 +305,9 @@ body, html {
     }
 
     .bottom {
-      border-top: 1px solid $subtitle-color;
+      //border-top: 1px solid $subtitle-color;
       padding-top: 10px;
-      text-align: center;
+      text-align: left;
 
       p {
         font-size: 0.8em;
@@ -317,55 +317,48 @@ body, html {
   }
 }
 
-.navigation_bar {
-    padding-top: 2%;
-    padding-bottom: 2%;
-    height: 96%;
-    width: 350px;
-    position: fixed;
-    right: 0;
-    color: green;
-    background-color: rgba(22,28,29,1);
+.navbar {
+  position: fixed;
+  width: 70%;
+  background: $form-background;
+  text-align: left;
+  padding: 20px 15%;
+  z-index: 999;
+
+  .content-container {
     display: flex;
-    transition-duration: 0.2s;
+    justify-content: space-between;
 
-    .nav_bar_clickable {
-        height: 110%;
-        width: 50px;
-        margin-top: -40px;
-        margin-left: -50px;
-        background-color: rgba(22,28,29,1);
-        transition-duration: 0.2s;
+    .content {
+      flex-direction: column;
+
+      .section {
+        flex: 1;
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+        h4 {
+          color: $title-color;
+          margin-bottom: 5px;
+          margin-top: 5px;
+        }
+
+        .graphic-container {
+          margin-top: 20px;
+        }
+
+        p, a {
+          color: $subtitle-color;
+          line-height: 1.6;
+          text-decoration: none;
+        }
+
+        a:hover {
+          color: $title-color;
+        }
+      }
     }
-
-    .nav_bar_clickable:hover {
-        background-color: rgba(22,28,29,0.5);
-    }
-
-    .nav_bar_general {
-        padding-left: 10px;
-
-        p {
-            margin-bottom: 0px;
-            margin-top: 10px;
-        }
-
-        pre {
-            margin-top: 10px;
-            margin-bottom: 0px;
-        }
-
-        .nav_bar_header {
-            width: 100%;
-            display: flex;
-            font-weight: bold;
-        }
-
-        .nav_bar_option {
-            width: 100%;
-            display: flex;
-        }
-    }
+  }
 }
 
 .float_form_auth {

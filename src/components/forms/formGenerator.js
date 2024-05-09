@@ -129,18 +129,35 @@ export const FormGenerator = ({
  * {
  *  type: 'text',
  *  name: 'name',
- *  ref: React.createRef()
+ *  ref: React.createRef(),
+ *  onChange: null OR validationFunc
+ *  validationInfo: null OR useState("")
  * }    } input - basic text input
  * @param {
  * {
  *  type: 'info',
- *  action: 'Update'
+ *  action: 'Update',
  *  endpoint: 'Album'
  * }    } info - information about form
  */
 const TextInputGenerator = ({
     input, info
 }) => {
+
+    const [textInputValidationInfo, setTextInputValidationInfo] = useState("Empty")
+
+    const inputRegex = /^[^'";<>=]+$/
+
+    const defaultValidation = (event) => {
+        if (event.target.value === "") {
+            setTextInputValidationInfo("Empty")
+        } else if (!inputRegex.test(event.target.value)) {
+            setTextInputValidationInfo("Please provide correct value")
+        } else {
+            setTextInputValidationInfo("Success")
+        }
+    }
+
     return (
         <div className="form-field">
             <label>
@@ -150,15 +167,23 @@ const TextInputGenerator = ({
                 id={input.name + info.action + info.endpoint + 'Input'}
                 autoComplete='off'
                 ref={input.ref}
-                onChange={input.onChange}
-                className={ [ "Empty", "Success"].includes(input.validationInfo) ? "" : "input-incorrect" }
+                onChange={ input.onChange === null ? defaultValidation : input.onChange}
+                className={
+                    [ "Empty", "Success"].includes(
+                        input.validationInfo === null ? textInputValidationInfo : input.validationInfo
+                    ) ? "" : "input-incorrect"
+                }
             />
             <div
                 className="popup"
-                style={ [ "Empty", "Success"].includes(input.validationInfo) ? {"display": "none", "height": "0px"} : {"display": "block"} }
+                style={
+                    [ "Empty", "Success"].includes(
+                        input.validationInfo === null ? textInputValidationInfo : input.validationInfo
+                    ) ? {"display": "none", "height": "0px"} : {"display": "block"}
+                }
             >
                 <div className="popup-content">
-                    { input.validationInfo }
+                    { input.validationInfo === null ? textInputValidationInfo : input.validationInfo }
                 </div>
             </div>
         </div>
