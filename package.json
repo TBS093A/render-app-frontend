@@ -15,11 +15,13 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
+    "axios": "^1.7.9",
     "gatsby": "^5.13.3",
-    "gatsby-plugin-sass": "^6.13.1",
+    "gatsby-plugin-sass": "^3.2.0",
     "react": "^18",
     "react-dom": "^18",
-    "react-particles-js": "^3.4.1",
+    "react-router-dom": "^7.1.5",
+    "react-tsparticles": "^2.12.2",
     "sass": "^1.32.7"
   }
 }

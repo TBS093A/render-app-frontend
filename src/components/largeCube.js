@@ -5,8 +5,8 @@ import '../styles/large.cube.scss';
 
 const LargeCubeComponent = () => {
     return (
-        <div className="graphic-container">
-            <div className="cube">
+        <div className="large-graphic-container">
+            <div className="large-cube">
                 <div className="front"></div>
                 <div className="back"></div>
                 <div className="right"></div>

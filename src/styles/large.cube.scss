@@ -1,9 +1,9 @@
-$cube-size: 400px;
+$cube-size: 350px;
 $cube-color: rgba(0, 140, 0, 0.5);
-$perspective: 10000px;
+$perspective: 100000px;
 $animation-duration: 20s;
 
-@mixin cube-face {
+@mixin large-cube-face {
   position: absolute;
   width: $cube-size - 15px;
   height: $cube-size - 15px;
@@ -11,7 +11,7 @@ $animation-duration: 20s;
   will-change: transform;
 }
 
-@keyframes rotateCube {
+@keyframes rotateLargeCube {
   0% {
     transform: rotateX(0) rotateY(0) rotateZ(0);
   }
@@ -20,24 +20,26 @@ $animation-duration: 20s;
   }
 }
 
-.graphic-container {
-  perspective: $perspective;
-  perspective-origin: 50% 100px; // Adjusted for better 3D effect
-  z-index: 1; // Lower z-index than the login form to place it behind
+.large-graphic-container {
+  width: 100%;
+  margin-top: 0%;
+  //perspective: $perspective;
+  //perspective-origin: 50% 100px; // Adjusted for better 3D effect
+  //z-index: 1; // Lower z-index than the login form to place it behind
 }
 
-.cube {
+.large-cube {
   width: $cube-size;
   height: $cube-size;
-  position: relative;
+  //position: relative;
   margin: auto; // Centers the cube within the graphic container
   transform-style: preserve-3d;
   transform-origin: center center; // Rotates around the center of the cube
-  animation: rotateCube $animation-duration infinite linear;
+  animation: rotateLargeCube $animation-duration infinite linear;
   will-change: transform;
 
   div {
-    @include cube-face;
+    @include large-cube-face;
   }
 
   .front  { transform: translateZ($cube-size / 2); }
