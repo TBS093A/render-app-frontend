@@ -1,3 +1,5 @@
+// colors
+
 $first-color: rgba(0, 90, 25, 1);
 $secondary-color: white;
 $third-color: #242b2f;
@@ -17,6 +19,14 @@ $border-color: $first-color;
 $input-background: #222;
 $font-family-default: neue-haas-unica, sans-serif;
 
+// sizes
+
+$navbar-height: 110px;
+$footer-height: 300px;
+$content-container-height: calc(100vh - 300px - 110px);
+$content-container-height-without-footer: calc(100vh - 110px);
+
+//definitions
 
 body, html {
     margin: 0 auto;
@@ -44,6 +54,79 @@ body, html {
     h1 {
         font-size: 72px;
     }
+  }
+
+  .dashboard-container {
+    height: $content-container-height;
+    width: 100%;
+    background-color: $header-background;
+    display: flex;
+
+    .large-menu-content {
+      display: block;
+      height: 100%;
+      width: 300px;
+      color: $secondary-color;
+      background: $form-background;
+
+      p {
+        font-weight: bold;
+        font-size: larger;
+        text-align: left;
+        margin-left: 20px;
+      }
+
+      ol {
+        width: 100%;
+        padding: 0px;
+        list-style-type: none;
+
+        li {
+          display: flex;
+          width: 100%;
+          padding-top: 15px;
+          padding-bottom: 15px;
+          cursor:pointer;
+          transition-duration: 0.2s;
+
+          p {
+            height: 13px;
+            padding-top: 7px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            margin-left: 0px;
+            font-size: medium;
+            font-weight: bold;
+            text-align: left;
+          }
+
+          i {
+            color: $first-color;
+            height: 33px;
+            width: 33px;
+            margin-right: 30px;
+            margin-left: 30px;
+            transition-duration: 0.2s;
+          }
+  
+          &:hover {
+            background-color: $first-color;
+
+            i {
+              color: $form-background; // $secondary-color;
+            }
+          }
+        }
+      }
+    }
+
+    .dashboard-content {
+        height: 100%;
+        width: calc(100vw - 300px);
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
   }
 
   .landing-container {
@@ -133,6 +216,7 @@ body, html {
     padding-top: 15%;
     padding-bottom: 12%;
     width: 50%;
+    //height: $content-container-height;
     align-items: center;
     justify-content: space-evenly;
   }
@@ -144,6 +228,65 @@ body, html {
     .form {
       background: none;
       margin-top: 0px;
+    }
+  }
+
+  .list-container {
+    width: 95%;
+    height: 100%;
+    margin: 2.5%;
+    background-color: $form-background;
+    color: $secondary-color;
+
+    .list-generator-container {
+      width: 100%;
+      height: 50%;
+
+      .items-columns {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+        height: 10px;
+        text-align: center;
+
+        .item-column-row {
+          font-weight: bolder;
+          height: 10px;
+          margin-top: 5px;
+          margin-bottom: 5px;
+        }
+      }
+
+      .items-list {
+        .item-row {
+          display: flex;
+          align-items: center;
+          margin-top: 10px;
+          margin-bottom: 10px;
+
+          .item-info {
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 15px;
+          }
+        }
+
+        .update-button {
+
+        }
+
+        .delete-button {
+
+        }
+      }
+
+    }
+
+    .element-details {
+      width: 100%;
+      height: 50%;
     }
   }
 
@@ -265,6 +408,7 @@ body, html {
 
   footer {
     width: 70%;
+    height: $footer-height - 40px;
     background: $form-background;
     text-align: left;
     padding: 20px 15%;
@@ -319,7 +463,8 @@ body, html {
 }
 
 .navbar {
-  position: fixed;
+  position: relative;
+  height: $navbar-height - 40px;
   width: 70%;
   background: $form-background;
   text-align: left;

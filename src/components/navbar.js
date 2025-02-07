@@ -14,11 +14,11 @@ const NavBarComponent = () => {
                         <SmallCubeComponent />
                     </div>
                 </div>
-                <div className="content">
+                {/* <div className="content">
                     <div className="section">
                         <h4>Menu |||</h4>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     )
