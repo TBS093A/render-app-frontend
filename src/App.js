@@ -6,6 +6,7 @@ import LoginPage from './pages/auth/login';
 import RegisterPage from './pages/auth/register';
 import DashboardPage from './pages/dashboard';
 import LandingPage from './pages/landing';
+import NotFoundPage from './pages/404';
 
 import FormLogin from './pages/FormLogin';
 import FormRegister from './pages/FormRegister';
@@ -49,7 +50,7 @@ function App() {
         <Route path="/models" element={<FormModels />} />
         <Route path="/renders" element={<FormRenders />} />
         <Route path="/ai-tasks" element={<FormAi />} />
-        <Route path="*" element={<div>Not Found</div>} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );

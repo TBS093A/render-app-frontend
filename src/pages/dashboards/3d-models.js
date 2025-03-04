@@ -1,29 +1,29 @@
 import React, { useState } from 'react';
 import { ListGenerator } from '../../components/forms/listGenerator';
-import FormGenerator from '../../components/forms/formGenerator';
+import { FormGenerator } from '../../components/forms/formGenerator';
 
-const AIModelsDashboard = () => {
+const ThreeDModelsDashboard = () => {
     const [selectedModel, setSelectedModel] = useState(null);
     const [models, setModels] = useState([
         {
             id: 1,
-            name: 'stable-diffusion',
-            type: 'text-to-image',
+            name: 'Model A',
+            type: '3D',
             status: 'Active',
             lastModified: '2024-03-20',
-            version: '2.1'
+            size: '2.5MB'
         },
         {
             id: 2,
-            name: 'gpt-4',
-            type: 'text-generation',
+            name: 'Model B',
+            type: '3D',
             status: 'Inactive',
             lastModified: '2024-03-19',
-            version: '1.0'
+            size: '1.8MB'
         }
     ]);
     const [isFormVisible, setIsFormVisible] = useState(false);
-    const [formMode, setFormMode] = useState('create');
+    const [formMode, setFormMode] = useState('create'); // 'create' lub 'edit'
     const [message, setMessage] = useState({ type: '', text: '' });
 
     const handleModelSelect = (model) => {
@@ -60,7 +60,7 @@ const AIModelsDashboard = () => {
         if (selectedModel?.id === modelId) {
             setSelectedModel(null);
         }
-        setMessage({ type: 'success', text: 'AI Model has been deleted' });
+        setMessage({ type: 'success', text: 'Model has been deleted' });
     };
 
     const handleFormSubmit = (formData) => {
@@ -72,14 +72,14 @@ const AIModelsDashboard = () => {
                 status: 'Active'
             };
             setModels([...models, newModel]);
-            setMessage({ type: 'success', text: 'AI Model has been created' });
+            setMessage({ type: 'success', text: 'Model has been created' });
         } else {
             setModels(models.map(model => 
                 model.id === selectedModel.id 
                     ? { ...model, ...formData, lastModified: new Date().toISOString().split('T')[0] }
                     : model
             ));
-            setMessage({ type: 'success', text: 'AI Model has been updated' });
+            setMessage({ type: 'success', text: 'Model has been updated' });
         }
         setIsFormVisible(false);
     };
@@ -118,17 +118,10 @@ const AIModelsDashboard = () => {
             type: 'select',
             required: true,
             options: [
-                { value: 'text-to-image', label: 'Text to Image' },
-                { value: 'image-to-text', label: 'Image to Text' }
+                { value: '3D', label: '3D' },
+                { value: '2D', label: '2D' }
             ],
-            value: selectedModel?.type || 'text-to-image'
-        },
-        {
-            name: 'version',
-            label: 'Version',
-            type: 'text',
-            required: true,
-            value: selectedModel?.version || '1.0'
+            value: selectedModel?.type || '3D'
         },
         {
             name: 'status',
@@ -146,13 +139,13 @@ const AIModelsDashboard = () => {
     return (
         <div className="list-container">
             <div className="dashboard-header">
-                <h2>AI Models</h2>
+                <h2>3D Models</h2>
                 <button 
                     className="create-button"
                     onClick={handleCreateModel}
                 >
                     <i className="fas fa-plus"></i>
-                    AI Model
+                    3D Model
                 </button>
             </div>
 
@@ -169,7 +162,7 @@ const AIModelsDashboard = () => {
                             fields={formFields}
                             onSubmit={handleFormSubmit}
                             onCancel={handleFormCancel}
-                            title={formMode === 'create' ? 'Create new AI Model' : 'Edit AI Model'}
+                            title={formMode === 'create' ? 'Create new model' : 'Edit model'}
                         />
                     </div>
                 </div>
@@ -191,14 +184,14 @@ const AIModelsDashboard = () => {
                             </div>
                         </div>
                         <div className="item-details">
-                            <div>Version: {model.version}</div>
                             <div>Last Modified: {model.lastModified}</div>
+                            <div>Size: {model.size}</div>
                         </div>
                     </div>
                 )}
                 renderDetails={(model) => (
                     <div className="details-panel">
-                        <h3>AI Model Details</h3>
+                        <h3>Model Details</h3>
                         <div className="detail-row">
                             <span className="detail-label">ID:</span>
                             <span className="detail-value">{model.id}</span>
@@ -212,16 +205,16 @@ const AIModelsDashboard = () => {
                             <span className="detail-value">{model.type}</span>
                         </div>
                         <div className="detail-row">
-                            <span className="detail-label">Wersja:</span>
-                            <span className="detail-value">{model.version}</span>
-                        </div>
-                        <div className="detail-row">
                             <span className="detail-label">Status:</span>
                             <span className="detail-value">{model.status}</span>
                         </div>
                         <div className="detail-row">
-                            <span className="detail-label">Ostatnia modyfikacja:</span>
+                            <span className="detail-label">Last Modified:</span>
                             <span className="detail-value">{model.lastModified}</span>
+                        </div>
+                        <div className="detail-row">
+                            <span className="detail-label">Size:</span>
+                            <span className="detail-value">{model.size}</span>
                         </div>
                     </div>
                 )}
@@ -230,5 +223,4 @@ const AIModelsDashboard = () => {
     );
 };
 
-export default AIModelsDashboard;
-
+export default ThreeDModelsDashboard;

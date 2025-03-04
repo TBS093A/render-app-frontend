@@ -1,159 +1,237 @@
 import React, { useState } from 'react';
 
 /**
- * Generic List Generator
+ * Generic List Generator Component
  * 
- * @param {Array} data - Array of items to display.
- * @param {ReactElement|Function} create_component - Shown when user clicks "Create +".
- * @param {ReactElement|Function} update_component - Shown when user clicks "Update".
- * @param {Function} delete_action - Called when user clicks "Delete".
+ * @param {Array} data - Array of items to display
+ * @param {string} title - Title of the list
+ * @param {ReactElement|Function} onCreate - Component shown when user clicks "Create +"
+ * @param {ReactElement|Function} onUpdate - Component shown when user clicks "Update"
+ * @param {Function} onDelete - Function called when user clicks "Delete"
+ * @param {Function} onRefresh - Optional function to refresh the list
  */
 export const ListGenerator = ({
   data = [],
-  create_component = null,
-  update_component = null,
-  delete_action = null,
+  title,
+  onCreate = null,
+  onUpdate = null,
+  onDelete = null,
+  onRefresh = null
 }) => {
-
-  const columns = data.length > 0 ? Object.keys(data[0]) : [];
-
-  var buttons = 0
-
-  if(create_component !== null) {
-    buttons++;
-  }
-  if(update_component !== null) {
-    buttons++;
-  }
-  if(delete_action !== null) {
-    buttons++;
-  }
-
-  const columns_count = 100 / (columns.length + buttons);
-
-  // Controls whether the "create" form is visible
+  const columns = data.length > 0 
+    ? Object.keys(data[0]).filter(key => !key.toLowerCase().includes('id')) 
+    : [];
   const [createVisible, setCreateVisible] = useState(false);
-
-  // Track which item is being updated (store an ID or index, or null if none)
   const [itemBeingUpdated, setItemBeingUpdated] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   // Toggle the "create" form
   const handleToggleCreate = () => {
     setCreateVisible((prev) => !prev);
-    // If user opens the create form, you might also want to close any update forms
     setItemBeingUpdated(null);
+    setSelectedItem(null);
   };
 
   // Toggle update form for a specific item
   const handleToggleUpdate = (itemId) => {
     setItemBeingUpdated((prev) => (prev === itemId ? null : itemId));
-    // Also close create if it's open
     setCreateVisible(false);
   };
 
-  // Handle delete
-  const handleDelete = (item) => {
-    if (typeof delete_action === 'function') {
-      delete_action(item);
+  // Handle delete with confirmation
+  const handleDelete = async (item) => {
+    if (window.confirm('Are you sure you want to delete this item?')) {
+      setIsLoading(true);
+      try {
+        if (typeof onDelete === 'function') {
+          await onDelete(item);
+          if (onRefresh) {
+            await onRefresh();
+          }
+        }
+      } catch (error) {
+        console.error('Error deleting item:', error);
+        alert('Failed to delete item. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
-  // Helper to render a component if it’s a function or a React element
+  // Handle refresh
+  const handleRefresh = async () => {
+    if (onRefresh) {
+      setIsLoading(true);
+      try {
+        await onRefresh();
+      } catch (error) {
+        console.error('Error refreshing list:', error);
+        alert('Failed to refresh list. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  // Handle item selection
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+  };
+
+  // Helper to render a component if it's a function or a React element
   const renderComponent = (component, props = {}) => {
-    // If it's a function, call it
     if (typeof component === 'function') {
       return component(props);
     }
-    // If it's a React element, clone it to pass in new props (optional)
     return React.cloneElement(component, props);
   };
 
   return (
     <div className="list-generator-container">
-
-      {create_component && (
-        <div className="create-section">
-          <button onClick={handleToggleCreate}>
-            {createVisible ? 'Close' : 'Create +'}
-          </button>
-          {createVisible && (
-            <div className="create-form">
-              {renderComponent(create_component)}
-            </div>
+      <div className="table-header">
+        {title && <h2>{title}</h2>}
+        <div className="header-actions">
+          {onRefresh && (
+            <button 
+              className="refresh-button"
+              onClick={handleRefresh}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Refreshing...' : 'Refresh'}
+            </button>
           )}
+          {onCreate && (
+            <button 
+              className="create-button"
+              onClick={handleToggleCreate}
+            >
+              {createVisible ? 'Close' : `+ ${title || 'Item'}`}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {createVisible && onCreate && (
+        <div className="create-form">
+          {renderComponent(onCreate)}
         </div>
       )}
 
       <div className="items-columns">
-        {
-            columns.map( 
-                (column) => (
-                
-                    <div 
-                      className="item-column-row" 
-                      style={{
-                        "width": columns_count + "%",
-                      }}
-                    >
-                        {column.toUpperCase()}
-                    </div>
-
-                )
-            )
-        } 
+        {columns.map((column) => (
+          <div key={column} className="item-column-row">
+            {column.toUpperCase()}
+          </div>
+        ))}
+        {(onUpdate || onDelete) && (
+          <div className="item-column-row">Actions</div>
+        )}
       </div>
 
       <div className="items-list">
-
-        {data.map((item) => (
-
-          <div key={item.id} className="item-row">
-
-            {
-                Object.values(item).map((value) => (
-                        <div 
-                          className="item-info"
-                          style={{
-                            "width": columns_count + "%",
-                          }}
-                        >
-                            {value}
-                        </div>
-                    )  
-                )
-            }
-
-            {/* UPDATE BUTTON & FORM */}
-            {update_component && (
-              <>
-                <button
-                  className="update-button" 
-                  onClick={() => handleToggleUpdate(item.id)}
-                >
-                  {itemBeingUpdated === item.id ? 'Close' : 'Update'}
-                </button>
-                {itemBeingUpdated === item.id && (
-                  <div className="update-form">
-                    {renderComponent(update_component, { item })}
-                  </div>
-                )}
-              </>
-            )}
-
-            {/* DELETE BUTTON */}
-            {delete_action && (
-              <button
-                className="delete-button"
-                onClick={() => handleDelete(item)}
-                style={{ marginLeft: '8px' }}
-              >
-                Delete
-              </button>
-            )}
+        {data.length === 0 ? (
+          <div className="no-data">
+            No items found. {onCreate && `Click '+ ${title || 'Item'}' to add new items.`}
           </div>
-        ))}
+        ) : (
+          data.map((item) => (
+            <div 
+              key={item.id} 
+              className={`item-row ${selectedItem?.id === item.id ? 'selected' : ''}`}
+              onClick={() => handleItemClick(item)}
+            >
+              {Object.entries(item)
+                .filter(([key]) => !key.toLowerCase().includes('id'))
+                .map(([key, value], index) => (
+                  <div key={index} className="item-info">
+                    {key.toLowerCase() === 'progress' ? (
+                      value === 100 ? (
+                        <span className="completed-text">Completed</span>
+                      ) : (
+                        <div className="progress-bar">
+                          <div 
+                            className="progress-fill" 
+                            style={{ width: `${value}%` }}
+                          />
+                          <span className="progress-text">{value}%</span>
+                        </div>
+                      )
+                    ) : key.toLowerCase() === 'status' ? (
+                      <span className={`status-text ${value.toLowerCase().replace(/\s+/g, '-')}`}>
+                        {value}
+                      </span>
+                    ) : (
+                      <span>{value}</span>
+                    )}
+                  </div>
+                ))}
+              {(onUpdate || onDelete) && (
+                <div className="action-buttons">
+                  {onUpdate && (
+                    <button
+                      className="update-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleUpdate(item.id);
+                      }}
+                    >
+                      {itemBeingUpdated === item.id ? 'Close' : 'Update'}
+                    </button>
+                  )}
+                  {onDelete && (
+                    <button
+                      className="delete-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(item);
+                      }}
+                      disabled={isLoading}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+              )}
+              {itemBeingUpdated === item.id && onUpdate && (
+                <div className="update-form">
+                  {renderComponent(onUpdate, { item })}
+                </div>
+              )}
+            </div>
+          ))
+        )}
       </div>
 
+      <div className="element-details">
+        {selectedItem ? (
+          <div className="details-content">
+            <h3>Details</h3>
+            {Object.entries(selectedItem)
+              .filter(([key]) => !key.toLowerCase().includes('id'))
+              .map(([key, value]) => (
+                <div key={key} className="detail-row">
+                  <span className="detail-label">{key}:</span>
+                  <span className="detail-value">
+                    {key.toLowerCase() === 'progress' ? (
+                      value === 100 ? (
+                        <span className="completed-text">Completed</span>
+                      ) : (
+                        <span>{value}%</span>
+                      )
+                    ) : (
+                      value
+                    )}
+                  </span>
+                </div>
+              ))}
+          </div>
+        ) : (
+          <div className="no-selection">
+            Select an item to view details
+          </div>
+        )}
+      </div>
     </div>
   );
 };
