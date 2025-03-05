@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { ListGenerator } from '../../components/forms/listGenerator';
 import FormGenerator from '../../components/forms/formGenerator';
 
@@ -7,26 +7,205 @@ const RendersDashboard = () => {
     const [renders, setRenders] = useState([
         {
             id: 1,
-            name: 'Render A',
-            type: '3D',
-            status: 'Completed',
-            lastModified: '2024-03-20',
-            resolution: '1920x1080',
-            progress: 100
+            name: "Character Animation",
+            type: "Animation",
+            status: "Completed",
+            progress: 100,
+            model: "Hero Character",
+            startTime: "2024-03-20 09:00:00",
+            endTime: "2024-03-20 11:30:00"
         },
         {
             id: 2,
-            name: 'Render B',
-            type: '2D',
-            status: 'In Progress',
-            lastModified: '2024-03-19',
-            resolution: '3840x2160',
-            progress: 45
+            name: "Environment Lighting",
+            type: "Still",
+            status: "In Progress",
+            progress: 75,
+            model: "Forest Scene",
+            startTime: "2024-03-20 10:15:00",
+            endTime: null
+        },
+        {
+            id: 3,
+            name: "Product Showcase",
+            type: "360 View",
+            status: "Queued",
+            progress: 0,
+            model: "Sports Car",
+            startTime: null,
+            endTime: null
+        },
+        {
+            id: 4,
+            name: "Battle Scene",
+            type: "Animation",
+            status: "Completed",
+            progress: 100,
+            model: "Warriors",
+            startTime: "2024-03-19 15:00:00",
+            endTime: "2024-03-19 18:30:00"
+        },
+        {
+            id: 5,
+            name: "Architectural Visualization",
+            type: "Still",
+            status: "In Progress",
+            progress: 60,
+            model: "Modern House",
+            startTime: "2024-03-20 08:45:00",
+            endTime: null
+        },
+        {
+            id: 6,
+            name: "Character Portrait",
+            type: "Still",
+            status: "Completed",
+            progress: 100,
+            model: "Fantasy Character",
+            startTime: "2024-03-19 11:00:00",
+            endTime: "2024-03-19 12:30:00"
+        },
+        {
+            id: 7,
+            name: "Vehicle Animation",
+            type: "Animation",
+            status: "In Progress",
+            progress: 82,
+            model: "Racing Car",
+            startTime: "2024-03-20 09:30:00",
+            endTime: null
+        },
+        {
+            id: 8,
+            name: "Product Display",
+            type: "360 View",
+            status: "Queued",
+            progress: 0,
+            model: "Smartphone",
+            startTime: null,
+            endTime: null
+        },
+        {
+            id: 9,
+            name: "Nature Scene",
+            type: "Still",
+            status: "Completed",
+            progress: 100,
+            model: "Mountain Landscape",
+            startTime: "2024-03-19 13:15:00",
+            endTime: "2024-03-19 15:45:00"
+        },
+        {
+            id: 10,
+            name: "Character Walk Cycle",
+            type: "Animation",
+            status: "In Progress",
+            progress: 45,
+            model: "Robot Character",
+            startTime: "2024-03-20 11:00:00",
+            endTime: null
+        },
+        {
+            id: 11,
+            name: "Jewelry Showcase",
+            type: "360 View",
+            status: "Queued",
+            progress: 0,
+            model: "Diamond Ring",
+            startTime: null,
+            endTime: null
+        },
+        {
+            id: 12,
+            name: "City Flythrough",
+            type: "Animation",
+            status: "Completed",
+            progress: 100,
+            model: "Future City",
+            startTime: "2024-03-19 09:00:00",
+            endTime: "2024-03-19 14:30:00"
+        },
+        {
+            id: 13,
+            name: "Interior Design",
+            type: "Still",
+            status: "In Progress",
+            progress: 68,
+            model: "Living Room",
+            startTime: "2024-03-20 10:00:00",
+            endTime: null
+        },
+        {
+            id: 14,
+            name: "Product Animation",
+            type: "Animation",
+            status: "Completed",
+            progress: 100,
+            model: "Gaming Console",
+            startTime: "2024-03-19 14:00:00",
+            endTime: "2024-03-19 16:00:00"
+        },
+        {
+            id: 15,
+            name: "Character Showcase",
+            type: "360 View",
+            status: "In Progress",
+            progress: 92,
+            model: "Superhero",
+            startTime: "2024-03-20 07:30:00",
+            endTime: null
         }
     ]);
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [formMode, setFormMode] = useState('create');
     const [message, setMessage] = useState({ type: '', text: '' });
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const nameInput = React.createRef();
+    const typeInput = React.createRef();
+    const resolutionInput = React.createRef();
+    const threeDModelInput = React.createRef();
+
+    const formRefs = [
+        nameInput,
+        typeInput,
+        resolutionInput,
+        threeDModelInput
+    ];
+
+    const inputList = [
+        {
+            type: 'info',
+            action: formMode === 'create' ? 'Create' : 'Update',
+            endpoint: 'renders',
+            button_value: formMode === 'create' ? '+ RENDER' : 'UPDATE',
+            allowButtonAction: false
+        },
+        {
+            type: 'text',
+            name: 'Name',
+            ref: nameInput,
+            value: selectedRender?.name || '',
+            onChange: null,
+            validationInfo: null
+        },
+        {
+            type: 'text',
+            name: 'Resolution',
+            ref: resolutionInput,
+            value: selectedRender?.resolution || '',
+            onChange: null,
+            validationInfo: null
+        },
+        {
+            type: 'choice-listing',
+            name: '3D Model',
+            ref: threeDModelInput,
+            values: selectedRender?.threeDModel|| '',
+            onChange: null,
+            validationInfo: null
+        },
+    ];
 
     const handleRenderSelect = (render) => {
         setSelectedRender(render);
@@ -107,71 +286,198 @@ const RendersDashboard = () => {
         ];
     };
 
-    const formFields = [
+    const mockRenders = [
         {
-            name: 'name',
-            label: 'Nazwa renderu',
-            type: 'text',
-            required: true,
-            value: selectedRender?.name || ''
+            id: 1,
+            name: "Dragon Scene",
+            type: "Animation",
+            status: "Completed",
+            progress: 100,
+            model: "Dragon Model",
+            startTime: "2024-03-01 10:00:00",
+            endTime: "2024-03-01 12:30:00"
         },
         {
-            name: 'type',
-            label: 'Typ renderu',
-            type: 'select',
-            required: true,
-            options: [
-                { value: '3D', label: '3D' },
-                { value: '2D', label: '2D' }
-            ],
-            value: selectedRender?.type || '3D'
+            id: 2,
+            name: "Castle Exterior",
+            type: "Still",
+            status: "In Progress",
+            progress: 65,
+            model: "Medieval Castle",
+            startTime: "2024-03-02 09:00:00",
+            endTime: null
         },
         {
-            name: 'resolution',
-            label: 'Rozdzielczość',
-            type: 'select',
-            required: true,
-            options: [
-                { value: '1920x1080', label: 'Full HD (1920x1080)' },
-                { value: '3840x2160', label: '4K (3840x2160)' },
-                { value: '7680x4320', label: '8K (7680x4320)' }
-            ],
-            value: selectedRender?.resolution || '1920x1080'
+            id: 3,
+            name: "Weapon Showcase",
+            type: "360 View",
+            status: "Queued",
+            progress: 0,
+            model: "Sci-fi Weapon",
+            startTime: null,
+            endTime: null
         },
         {
-            name: 'status',
-            label: 'Status',
-            type: 'select',
-            required: true,
-            options: [
-                { value: 'In Progress', label: 'W trakcie' },
-                { value: 'Completed', label: 'Zakończony' },
-                { value: 'Failed', label: 'Nieudany' }
-            ],
-            value: selectedRender?.status || 'In Progress'
+            id: 4,
+            name: "Forest Flythrough",
+            type: "Animation",
+            status: "Completed",
+            progress: 100,
+            model: "Forest Scene",
+            startTime: "2024-03-01 14:00:00",
+            endTime: "2024-03-01 16:00:00"
         },
         {
-            name: 'progress',
-            label: 'Postęp',
-            type: 'number',
-            required: true,
-            min: 0,
-            max: 100,
-            value: selectedRender?.progress || 0
+            id: 5,
+            name: "Robot Animation",
+            type: "Animation",
+            status: "In Progress",
+            progress: 45,
+            model: "Robot Character",
+            startTime: "2024-03-02 11:00:00",
+            endTime: null
+        },
+        {
+            id: 6,
+            name: "Spaceship Launch",
+            type: "Animation",
+            status: "Completed",
+            progress: 100,
+            model: "Space Ship",
+            startTime: "2024-03-01 13:00:00",
+            endTime: "2024-03-01 15:30:00"
+        },
+        {
+            id: 7,
+            name: "Temple Interior",
+            type: "Still",
+            status: "In Progress",
+            progress: 78,
+            model: "Ancient Temple",
+            startTime: "2024-03-02 10:00:00",
+            endTime: null
+        },
+        {
+            id: 8,
+            name: "Sword Display",
+            type: "360 View",
+            status: "Queued",
+            progress: 0,
+            model: "Fantasy Sword",
+            startTime: null,
+            endTime: null
+        },
+        {
+            id: 9,
+            name: "City Timelapse",
+            type: "Animation",
+            status: "Completed",
+            progress: 100,
+            model: "City Block",
+            startTime: "2024-03-01 09:00:00",
+            endTime: "2024-03-01 11:30:00"
+        },
+        {
+            id: 10,
+            name: "Warrior Battle",
+            type: "Animation",
+            status: "In Progress",
+            progress: 89,
+            model: "Warrior Character",
+            startTime: "2024-03-02 13:00:00",
+            endTime: null
+        },
+        {
+            id: 11,
+            name: "Car Showcase",
+            type: "360 View",
+            status: "Queued",
+            progress: 0,
+            model: "Futuristic Car",
+            startTime: null,
+            endTime: null
+        },
+        {
+            id: 12,
+            name: "Mountain Vista",
+            type: "Still",
+            status: "Completed",
+            progress: 100,
+            model: "Mountain Range",
+            startTime: "2024-03-01 15:00:00",
+            endTime: "2024-03-01 16:30:00"
+        },
+        {
+            id: 13,
+            name: "Alien Movement",
+            type: "Animation",
+            status: "In Progress",
+            progress: 34,
+            model: "Alien Creature",
+            startTime: "2024-03-02 14:00:00",
+            endTime: null
+        },
+        {
+            id: 14,
+            name: "Staff Effects",
+            type: "Animation",
+            status: "Completed",
+            progress: 100,
+            model: "Magic Staff",
+            startTime: "2024-03-01 16:00:00",
+            endTime: "2024-03-01 18:30:00"
+        },
+        {
+            id: 15,
+            name: "Cave Exploration",
+            type: "Animation",
+            status: "In Progress",
+            progress: 56,
+            model: "Underground Cave",
+            startTime: "2024-03-02 12:00:00",
+            endTime: null
         }
     ];
+
+    const filteredRenders = useMemo(() => {
+        return renders.filter(render => 
+            render.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            render.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            render.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            render.model.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }, [renders, searchQuery]);
 
     return (
         <div className="list-container">
             <div className="dashboard-header">
-                <h2>Rendered Materials</h2>
-                <button 
-                    className="create-button"
-                    onClick={handleCreateRender}
-                >
-                    <i className="fas fa-plus"></i>
-                    Render
-                </button>
+                <h2>3D Rendering</h2>
+                <div className="dashboard-controls">
+                    <div className="search-container">
+                        <input
+                            type="text"
+                            placeholder="Szukaj renderów..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="search-input"
+                        />
+                        {searchQuery && (
+                            <button
+                                className="clear-search"
+                                onClick={() => setSearchQuery('')}
+                            >
+                                ×
+                            </button>
+                        )}
+                    </div>
+                    <button 
+                        className="create-button"
+                        onClick={handleCreateRender}
+                    >
+                        <i className="fas fa-plus"></i>
+                        Create Render
+                    </button>
+                </div>
             </div>
 
             {message.text && (
@@ -184,17 +490,16 @@ const RendersDashboard = () => {
                 <div className="form-overlay">
                     <div className="form-container">
                         <FormGenerator
-                            fields={formFields}
-                            onSubmit={handleFormSubmit}
-                            onCancel={handleFormCancel}
-                            title={formMode === 'create' ? 'Utwórz nowy render' : 'Edytuj render'}
+                            inputList={inputList}
+                            refList={formRefs}
+                            action={handleFormSubmit}
                         />
                     </div>
                 </div>
             )}
 
             <ListGenerator
-                data={renders}
+                data={filteredRenders}
                 selectedItem={selectedRender}
                 onItemSelect={handleRenderSelect}
                 onItemAction={handleRenderAction}

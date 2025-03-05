@@ -392,7 +392,7 @@ const DownloadFilesListInputGenerator = ({
  * Text input generator, example:
  * @param {
  * {
- *  type: 'chice-listing',
+ *  type: 'choice-listing',
  *  name: 'name',
  *  values: list,
  *  ref: React.createRef()
@@ -488,21 +488,35 @@ const UploadInputGenerator = ({
 
     const setDropInfos = (name, size) => {
         input.setDropInfo(
-            'name: "'
-            + name
-            + '"\nsize: '
-            + (Math.round(size / 100 + 'e-2') / 100)
-            + ' MB'
+            {
+                name: name,
+                size: (Math.round(size / 100 + 'e-2') / 100) + ' MB'
+            }
         )
     }
 
     return (
-        <div onDrop={event => onLoadFileDrop(event)} >
-            <pre style={{ marginLeft: '40px' }}>
-                {input.dropInfo}
-            </pre>
+        <div 
+          onDrop={event => onLoadFileDrop(event)}
+          className='upload_input_container'  
+        >
+            <p>
+                {
+                    typeof input.dropInfo === 'string' ? 
+                        input.dropInfo 
+                      : 
+                        input.dropInfo.name 
+                }
+            </p>
+            <p>
+                {
+                    typeof input.dropInfo === 'string' ? 
+                        "" 
+                      : 
+                        input.dropInfo.size
+                }
+            </p>
             <input
-                style={{ marginTop: '-55px' }}
                 id={input.name + info.action + info.endpoint + 'Input'}
                 className='upload_input'
                 type='file'

@@ -138,6 +138,16 @@ const UserSettings = () => {
         return baseInputs;
     };
 
+    const formRefs = [usernameInput, emailInput, currentPasswordInput, newPasswordInput, confirmPasswordInput];
+
+    const handleFormAction = (refs) => {
+        const formData = {};
+        formRefs.forEach((ref, index) => {
+            formData[getInputList()[index].name] = ref.current.value;
+        });
+        handleSubmit(formRefs);
+    };
+
     return (
         <div className="list-container">
             <div className="user-settings">
@@ -157,17 +167,24 @@ const UserSettings = () => {
                     </div>
                 )}
 
-                <FormGenerator
-                    inputList={getInputList()}
-                    refList={[
-                        usernameInput,
-                        emailInput,
-                        currentPasswordInput,
-                        newPasswordInput,
-                        confirmPasswordInput
-                    ]}
-                    action={handleSubmit}
-                />
+                {isEditing && (
+                    <div className="form-overlay">
+                        <div className="form-container">
+                            <FormGenerator
+                                inputList={getInputList().map((field, index) => ({
+                                    ...field,
+                                    ref: formRefs[index],
+                                    type: field.type,
+                                    name: field.name,
+                                    onChange: field.onChange,
+                                    validationInfo: field.validationInfo
+                                }))}
+                                refList={formRefs}
+                                action={handleFormAction}
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

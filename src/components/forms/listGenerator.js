@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 /**
  * Generic List Generator Component
@@ -25,6 +25,31 @@ export const ListGenerator = ({
   const [itemBeingUpdated, setItemBeingUpdated] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const pageOptions = [5, 10, 15, 25, 50];
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  // Oblicz aktualnie wyświetlane elementy
+  const currentItems = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return data.slice(startIndex, startIndex + itemsPerPage);
+  }, [data, currentPage, itemsPerPage]);
+
+  // Obsługa zmiany strony
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    setSelectedItem(null);
+  };
+
+  // Obsługa zmiany liczby elementów na stronie
+  const handleItemsPerPageChange = (event) => {
+    const newItemsPerPage = parseInt(event.target.value);
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1);
+    setSelectedItem(null);
+  };
 
   // Toggle the "create" form
   const handleToggleCreate = () => {
@@ -135,7 +160,7 @@ export const ListGenerator = ({
             No items found. {onCreate && `Click '+ ${title || 'Item'}' to add new items.`}
           </div>
         ) : (
-          data.map((item) => (
+          currentItems.map((item) => (
             <div 
               key={item.id} 
               className={`item-row ${selectedItem?.id === item.id ? 'selected' : ''}`}
@@ -202,6 +227,52 @@ export const ListGenerator = ({
           ))
         )}
       </div>
+
+      {data.length > 0 && (
+        <div className="pagination-controls">
+          <div className="items-per-page">
+            <span>Items per page:</span>
+            <select value={itemsPerPage} onChange={handleItemsPerPageChange}>
+              {pageOptions.map(option => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+          </div>
+          <div className="pagination-buttons">
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              className="pagination-button"
+            >
+              &lt;&lt;
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="pagination-button"
+            >
+              &lt;
+            </button>
+            <span className="page-info">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="pagination-button"
+            >
+              &gt;
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              className="pagination-button"
+            >
+              &gt;&gt;
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="element-details">
         {selectedItem ? (

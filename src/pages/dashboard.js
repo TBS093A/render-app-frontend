@@ -63,10 +63,10 @@ const DashboardPage = () => {
                             onClick={() => handleNavigation('servers')}
                         >
                             <i className={"fas " + icons_size + " fa-server"}></i>
-                            <p>Dashboard</p>
+                            <p>GPU Instances</p>
                         </li>
                     </ol>
-                    <p>Rendering</p>
+                    <p>3D Stuff</p>
                     <ol>
                         <li 
                             className={isActive('3d-models') ? 'active' : ''}
@@ -80,10 +80,10 @@ const DashboardPage = () => {
                             onClick={() => handleNavigation('renders')}
                         >
                             <i className={"fas " + icons_size + " fa-paint-brush"}></i>
-                            <p>Rendered Materials</p>
+                            <p>3D Rendering</p>
                         </li>
                     </ol>
-                    <p>AI Training</p>
+                    <p>AI Stuff</p>
                     <ol>
                         <li 
                             className={isActive('ai-models') ? 'active' : ''}
@@ -97,7 +97,7 @@ const DashboardPage = () => {
                             onClick={() => handleNavigation('ai-tasks')}
                         >
                             <i className={"fas " + icons_size + " fa-microchip"}></i>
-                            <p>AI Training Tasks</p>
+                            <p>AI Training</p>
                         </li>
                     </ol>
                     <p>User</p>

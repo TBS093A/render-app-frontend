@@ -2,27 +2,25 @@ import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { userAuthSelector } from '../../../redux/slices/userAuthSlice'
-import { modelCrudSelector } from '../../../redux/slices/modelCrudSlice'
-import modelCrudAsyncThunk from '../../../redux/asyncThunks/modelCrudAsyncThunk'
+import { threeDModelCrudSelector } from '../../../redux/slices/threeDModelCrudSlice'
+import { uploadModel } from '../../../redux/asyncThunks/threeDModelCrudAsyncThunk'
 
 import FormGenerator from '../formGenerator'
 
-
 const ModelUploadForm = () => {
-
     const dispatch = useDispatch()
 
     const [blend, setBlend] = useState('')
     const [blendInfo, setBlendInfo] = useState('Drop/Click\nfor upload "*.blend" file')
     
-    const { upload_blend_file_status } = useSelector( modelCrudSelector )
+    const { upload_blend_file_status } = useSelector( threeDModelCrudSelector )
     const { user, token } = useSelector( userAuthSelector )
 
-    let inputList = [
+    const inputList = [
         {
             type: 'info',
             action: 'Upload',
-            endpint: 'model/upload',
+            endpoint: 'model/upload',
             button_value: 'Upload Model'
         },
         {
@@ -37,20 +35,19 @@ const ModelUploadForm = () => {
     ]
 
     const handleModelUpload = () => {
-        let body = {
+        if (!blend) {
+            return;
+        }
+
+        dispatch( uploadModel({
             user_id: user.id,
             file: blend,
             token: token
-        }
-        console.log( body )
-        dispatch( modelCrudAsyncThunk.fetchUploadModel( body ) )
+        }));
     }
 
     return (
-        <div 
-            className="float_form_model"
-            style={ { marginTop: '17%'} }
-        >
+        <div>
             <FormGenerator 
                 inputList={ inputList }
                 refList={ [] }

@@ -252,15 +252,15 @@ body, html {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     .list-generator-container {
-        width: 100%;
+      width: 100%;
         display: flex;
         flex-direction: column;
         gap: 20px;
 
         .table-header {
-            display: flex;
+        display: flex;
             justify-content: space-between;
-            align-items: center;
+        align-items: center;
 
             h2 {
                 margin: 0;
@@ -313,13 +313,13 @@ body, html {
             background-color: rgba($background-color, 0.1);
             border-radius: 4px;
 
-            .item-column-row {
+        .item-column-row {
                 font-weight: 600;
                 color: $title-color;
-            }
         }
+      }
 
-        .items-list {
+      .items-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -332,7 +332,7 @@ body, html {
                 border-radius: 4px;
             }
 
-            .item-row {
+        .item-row {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
                 gap: 10px;
@@ -352,8 +352,8 @@ body, html {
                 }
 
                 .item-info {
-                    display: flex;
-                    align-items: center;
+          display: flex;
+          align-items: center;
                     gap: 10px;
 
                     .progress-bar {
@@ -504,6 +504,75 @@ body, html {
                 }
             }
         }
+
+        .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-top: 20px;
+            border-top: 1px solid rgba($subtitle-color, 0.1);
+
+            .items-per-page {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                span {
+                    color: $subtitle-color;
+                }
+
+                select {
+                    padding: 5px 10px;
+                    background: $background-color;
+                    color: $title-color;
+                    border: 1px solid $border-color;
+                    border-radius: 4px;
+                    cursor: pointer;
+
+                    &:focus {
+                        outline: none;
+                        border-color: $first-color;
+                    }
+
+                    option {
+                        background: $background-color;
+                        color: $title-color;
+                    }
+                }
+            }
+
+            .pagination-buttons {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                .pagination-button {
+                    padding: 5px 10px;
+                    background: $background-color;
+                    color: $title-color;
+                    border: 1px solid $border-color;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+
+                    &:hover:not(:disabled) {
+                        background: $first-color;
+                        border-color: $first-color;
+                    }
+
+                    &:disabled {
+                        opacity: 0.5;
+                        cursor: not-allowed;
+                    }
+                }
+
+                .page-info {
+                    color: $subtitle-color;
+                    margin: 0 10px;
+                }
+            }
+        }
     }
 
     .list-row {
@@ -513,7 +582,7 @@ body, html {
         padding: 15px;
         background-color: white;
         border-radius: 4px;
-        margin-bottom: 10px;
+          margin-bottom: 10px;
         cursor: pointer;
         transition: all 0.2s;
 
@@ -521,7 +590,7 @@ body, html {
             background-color: rgba($background-color, 0.05);
         }
 
-        .item-info {
+          .item-info {
             display: flex;
             flex-direction: column;
             gap: 5px;
@@ -585,7 +654,7 @@ body, html {
                 gap: 10px;
 
                 .progress-bar {
-                    width: 100%;
+      width: 100%;
                     height: 8px;
                     background-color: rgba($subtitle-color, 0.1);
                     border-radius: 4px;
@@ -1046,25 +1115,29 @@ body, html {
     }
 }
 
-.float_form_model {
-    position: fixed;
-    width: 400px;
-    padding: 50px;
+.upload_input_container {
+    border: dashed 2px rgba(0,128,0,1);
     border-radius: 10px;
-    color: green;
-    background-color: rgba(22,28,29,1);
-    margin-left: 50%;
+    width: 350px - 4px - 20px - 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    p {
+      font-weight: bold;
+      font-size: 12px;
+      text-align: center;
+    }
 
     .upload_input {
         width: 0px !important;
         height: 0px !important;
-        padding-top: 70px;
-        padding-left: 400px;
-        margin-left: 0px;
+        padding-top: 10px;
+        padding-left: 100%;
+        padding-bottom: 10px;
         color: rgba(0,128,0,1);
         font-family: Ubuntu;
-        border: dashed 2px rgba(0,128,0,1);
         overflow: hidden;
+        cursor: pointer;
     }
 
     button {
@@ -1332,34 +1405,79 @@ body, html {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    margin-bottom: 20px;
 
     h2 {
-        color: $title-color;
         margin: 0;
-        font-size: 24px;
     }
 
-    .create-button {
+    .dashboard-controls {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 10px 20px;
-        background: $first-color;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.3s ease;
+        gap: 16px;
 
-        i {
-            font-size: 16px;
+        .search-container {
+            position: relative;
+            
+            .search-input {
+                width: 250px;
+                padding: 8px 32px 8px 12px;
+                background: $input-background;
+                border: 1px solid $border-color;
+                border-radius: 5px;
+                color: white;
+                transition: border-color 0.3s;
+
+                &:hover {
+                    border-color: rgba(111,108,106,1);
+                }
+
+                &:focus {
+                    outline: none;
+                    border-color: $first-color;
+                }
+            }
+
+            .clear-search {
+                position: absolute;
+                right: 8px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                color: #666;
+                cursor: pointer;
+                font-size: 18px;
+                padding: 0;
+                line-height: 1;
+
+                &:hover {
+                    color: #333;
+                }
+            }
         }
 
-        &:hover {
-            background: darken($first-color, 10%);
-            transform: translateY(-2px);
+        .create-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: $first-color;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+
+            i {
+                font-size: 16px;
+            }
+
+            &:hover {
+                background: darken($first-color, 10%);
+                transform: translateY(-2px);
+            }
         }
     }
 }
@@ -1377,12 +1495,65 @@ body, html {
     z-index: 1000;
 
     .form-container {
-        background: $form-background;
-        padding: 30px;
-        border-radius: 10px;
-        width: 500px;
         max-width: 90%;
         max-height: 90vh;
         overflow-y: auto;
     }
+}
+
+/* Stylizacja natywnych suwaków */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: $form-background;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: $first-color;
+    border-radius: 5px;
+
+    &:hover {
+        background: darken($first-color, 10%);
+    }
+
+    &:active {
+        background: darken($first-color, 20%);
+    }
+}
+
+::-webkit-scrollbar-button {
+    background: $first-color;
+    
+    &:hover {
+        background: darken($first-color, 10%);
+    }
+}
+
+::-webkit-scrollbar-button:vertical:start:decrement,
+::-webkit-scrollbar-button:vertical:end:increment,
+::-webkit-scrollbar-button:horizontal:start:decrement,
+::-webkit-scrollbar-button:horizontal:end:increment {
+    background-color: $first-color;
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: $first-color $form-background;
+}
+
+/* Style dla wyłączonych suwaków */
+::-webkit-scrollbar-thumb:disabled,
+::-webkit-scrollbar-button:disabled {
+    background: rgba($first-color, 1);
+    cursor: not-allowed;
+}
+
+/* Wymuszenie stylów nawet gdy content nie wymaga przewijania */
+.dashboard-content {
+    min-height: 100%;  /* Wymusza pojawienie się suwaka */
 }

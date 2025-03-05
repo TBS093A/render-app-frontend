@@ -1,30 +1,231 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { ListGenerator } from '../../components/forms/listGenerator';
-import { FormGenerator } from '../../components/forms/formGenerator';
+import FormGenerator from '../../components/forms/formGenerator';
 
 const AITasksDashboard = () => {
     const [selectedTask, setSelectedTask] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
     const [tasks, setTasks] = useState([
         {
             id: 1,
-            name: 'Task A',
-            type: 'Training',
-            status: 'In Progress',
-            lastModified: '2024-03-20',
-            progress: 45
+            name: "Model Training - CNN",
+            type: "Training",
+            status: "Completed",
+            progress: 100,
+            model: "Object Detection v2",
+            startTime: "2024-03-20 09:00:00",
+            endTime: "2024-03-20 14:30:00"
         },
         {
             id: 2,
-            name: 'Task B',
-            type: 'Inference',
-            status: 'Completed',
-            lastModified: '2024-03-19',
-            progress: 100
+            name: "BERT Fine-tuning",
+            type: "Fine-tuning",
+            status: "In Progress",
+            progress: 75,
+            model: "Text Generator",
+            startTime: "2024-03-20 10:15:00",
+            endTime: null
+        },
+        {
+            id: 3,
+            name: "Model Evaluation",
+            type: "Evaluation",
+            status: "Queued",
+            progress: 0,
+            model: "Style Transfer v1",
+            startTime: null,
+            endTime: null
+        },
+        {
+            id: 4,
+            name: "Performance Testing",
+            type: "Testing",
+            status: "Completed",
+            progress: 100,
+            model: "Face Recognition",
+            startTime: "2024-03-19 15:00:00",
+            endTime: "2024-03-19 17:30:00"
+        },
+        {
+            id: 5,
+            name: "Model Training - RNN",
+            type: "Training",
+            status: "In Progress",
+            progress: 60,
+            model: "Language Translator",
+            startTime: "2024-03-20 08:45:00",
+            endTime: null
+        },
+        {
+            id: 6,
+            name: "GAN Training",
+            type: "Training",
+            status: "Completed",
+            progress: 100,
+            model: "Image Generation",
+            startTime: "2024-03-19 11:00:00",
+            endTime: "2024-03-19 18:30:00"
+        },
+        {
+            id: 7,
+            name: "Model Optimization",
+            type: "Fine-tuning",
+            status: "In Progress",
+            progress: 82,
+            model: "Voice Synthesis",
+            startTime: "2024-03-20 09:30:00",
+            endTime: null
+        },
+        {
+            id: 8,
+            name: "Accuracy Testing",
+            type: "Testing",
+            status: "Queued",
+            progress: 0,
+            model: "Pose Estimation",
+            startTime: null,
+            endTime: null
+        },
+        {
+            id: 9,
+            name: "Transfer Learning",
+            type: "Training",
+            status: "Completed",
+            progress: 100,
+            model: "Scene Understanding",
+            startTime: "2024-03-19 13:15:00",
+            endTime: "2024-03-19 16:45:00"
+        },
+        {
+            id: 10,
+            name: "Model Validation",
+            type: "Evaluation",
+            status: "In Progress",
+            progress: 45,
+            model: "Text Summarizer",
+            startTime: "2024-03-20 11:00:00",
+            endTime: null
+        },
+        {
+            id: 11,
+            name: "Hyperparameter Tuning",
+            type: "Fine-tuning",
+            status: "Queued",
+            progress: 0,
+            model: "Speech Recognition",
+            startTime: null,
+            endTime: null
+        },
+        {
+            id: 12,
+            name: "Model Training - YOLO",
+            type: "Training",
+            status: "Completed",
+            progress: 100,
+            model: "Object Tracking",
+            startTime: "2024-03-19 09:00:00",
+            endTime: "2024-03-19 15:30:00"
+        },
+        {
+            id: 13,
+            name: "Performance Optimization",
+            type: "Fine-tuning",
+            status: "In Progress",
+            progress: 68,
+            model: "Image Segmentation",
+            startTime: "2024-03-20 10:00:00",
+            endTime: null
+        },
+        {
+            id: 14,
+            name: "Model Deployment Test",
+            type: "Testing",
+            status: "Completed",
+            progress: 100,
+            model: "Sentiment Analysis",
+            startTime: "2024-03-19 14:00:00",
+            endTime: "2024-03-19 16:00:00"
+        },
+        {
+            id: 15,
+            name: "Model Training - GPT",
+            type: "Training",
+            status: "In Progress",
+            progress: 92,
+            model: "Chatbot Model",
+            startTime: "2024-03-20 07:30:00",
+            endTime: null
         }
     ]);
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [formMode, setFormMode] = useState('create');
     const [message, setMessage] = useState({ type: '', text: '' });
+
+    const nameInput = React.createRef();
+    const typeInput = React.createRef();
+    const statusInput = React.createRef();
+    const progressInput = React.createRef();
+
+    const formRefs = [
+        nameInput,
+        typeInput,
+        statusInput,
+        progressInput
+    ];
+
+    const inputList = [
+        {
+            type: 'info',
+            action: formMode === 'create' ? 'Create' : 'Update',
+            endpoint: 'ai/tasks',
+            button_value: formMode === 'create' ? '+ AI TASK' : 'UPDATE',
+            allowButtonAction: false
+        },
+        {
+            type: 'text',
+            name: 'NAME',
+            ref: nameInput,
+            value: selectedTask?.name || '',
+            onChange: null,
+            validationInfo: null
+        },
+        {
+            type: 'select',
+            name: 'TYPE',
+            ref: typeInput,
+            options: [
+                { value: 'text-to-image', label: 'Text to Image' },
+                { value: 'image-to-text', label: 'Image to Text' }
+            ],
+            value: selectedTask?.type || 'text-to-image',
+            onChange: null,
+            validationInfo: null
+        },
+        {
+            type: 'select',
+            name: 'STATUS',
+            ref: statusInput,
+            options: [
+                { value: 'In Progress', label: 'In Progress' },
+                { value: 'Completed', label: 'Completed' },
+                { value: 'Failed', label: 'Failed' },
+                { value: 'Cancelled', label: 'Cancelled' }
+            ],
+            value: selectedTask?.status || 'In Progress',
+            onChange: null,
+            validationInfo: null
+        },
+        {
+            type: 'number',
+            name: 'PROGRESS',
+            ref: progressInput,
+            value: selectedTask?.progress || 0,
+            min: 0,
+            max: 100,
+            onChange: null,
+            validationInfo: null
+        }
+    ];
 
     const handleTaskSelect = (task) => {
         setSelectedTask(task);
@@ -114,6 +315,14 @@ const AITasksDashboard = () => {
         setSelectedTask(null);
     };
 
+    const handleFormAction = (refs) => {
+        const formData = {};
+        refs.forEach((ref, index) => {
+            formData[inputList[index].name] = ref.current.value;
+        });
+        handleFormSubmit(formData);
+    };
+
     const getTaskActions = (task) => {
         const actions = [];
         
@@ -147,52 +356,45 @@ const AITasksDashboard = () => {
         return actions;
     };
 
-    const formFields = [
-        {
-            name: 'name',
-            label: 'Task Name',
-            type: 'text',
-            required: true,
-            value: selectedTask?.name || ''
-        },
-        {
-            name: 'type',
-            label: 'Task Type',
-            type: 'select',
-            required: true,
-            options: [
-                { value: 'Training', label: 'Training' },
-                { value: 'Inference', label: 'Inference' },
-                { value: 'Evaluation', label: 'Evaluation' }
-            ],
-            value: selectedTask?.type || 'Training'
-        },
-        {
-            name: 'status',
-            label: 'Status',
-            type: 'select',
-            required: true,
-            options: [
-                { value: 'In Progress', label: 'In Progress' },
-                { value: 'Completed', label: 'Completed' },
-                { value: 'Failed', label: 'Failed' },
-                { value: 'Cancelled', label: 'Cancelled' }
-            ],
-            value: selectedTask?.status || 'In Progress'
-        }
-    ];
+    const filteredTasks = useMemo(() => {
+        return tasks.filter(task => 
+            task.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            task.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            task.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            task.model.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }, [tasks, searchQuery]);
 
     return (
         <div className="list-container">
             <div className="dashboard-header">
-                <h2>AI Tasks</h2>
-                <button 
-                    className="create-button"
-                    onClick={handleCreateTask}
-                >
-                    <i className="fas fa-plus"></i>
-                    Task
-                </button>
+                <h2>AI Training</h2>
+                <div className="dashboard-controls">
+                    <div className="search-container">
+                        <input
+                            type="text"
+                            placeholder="Szukaj zadań..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="search-input"
+                        />
+                        {searchQuery && (
+                            <button
+                                className="clear-search"
+                                onClick={() => setSearchQuery('')}
+                            >
+                                ×
+                            </button>
+                        )}
+                    </div>
+                    <button 
+                        className="create-button"
+                        onClick={handleCreateTask}
+                    >
+                        <i className="fas fa-plus"></i>
+                        Create Task
+                    </button>
+                </div>
             </div>
 
             {message.text && (
@@ -205,17 +407,17 @@ const AITasksDashboard = () => {
                 <div className="form-overlay">
                     <div className="form-container">
                         <FormGenerator
-                            fields={formFields}
+                            inputList={inputList}
+                            formRefs={formRefs}
                             onSubmit={handleFormSubmit}
                             onCancel={handleFormCancel}
-                            title={formMode === 'create' ? 'Create new task' : 'Edit task'}
                         />
                     </div>
                 </div>
             )}
 
             <ListGenerator
-                data={tasks}
+                data={filteredTasks}
                 selectedItem={selectedTask}
                 onItemSelect={handleTaskSelect}
                 onItemAction={handleTaskAction}
