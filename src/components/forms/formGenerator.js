@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import passwordVisibleImg from '../../images/password-visible.png'
 import passwordHiddenImg from '../../images/password-hidden.png'
@@ -6,43 +6,28 @@ import passwordHiddenImg from '../../images/password-hidden.png'
 /**
  *
  * @param { [ {}, {}, ...{} ] } inputList - list of dicts with info about input
- * @param { [] } refList - react ref objects list for handler validation
  * @param { } action - fetch method
  */
 export const FormGenerator = ({
-    inputList, refList,
+    inputList,
     action
 }) => {
 
-    const handler = async (event) => {
-        event.preventDefault()
-
-        if ( inputList[0].action === 'Async' ) {
-            await action(refList)
-        } else if (
-             inputList[0].action === 'Download'
-             || inputList[0].action === 'Upload'
-        ) {
-            await action()
-        } else {
-            for (let i = 0; i < refList.length; i++) {
-                if (refList[i].current.value === ''
-                    && inputList[0].action !== 'Update'
-                    || i === 0
-                    && refList.length !== 1
-                ) {
-                    refList[i].current.focus()
-                } else if (i === refList.length - 1) {
-                    await action(refList)
-                }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const formData = {};
+        inputList.forEach((singleInput, index) => {
+            if (typeof singleInput.type !== 'undefined' && singleInput.ref?.current) {
+                formData[singleInput.name] = singleInput.ref.current.value;
             }
-        }
-    }
+        });
+        action(formData);
+    };
 
     let info
 
     return (
-        <form onSubmit={event => handler(event)} className="form">
+        <form onSubmit={handleSubmit} className="form">
             {
                 inputList.map((input, key) => {
 
@@ -104,6 +89,13 @@ export const FormGenerator = ({
                                 key={key}
                             />
                         )
+                    } else if (input.type === 'label') {
+                        return (
+                            <div className="form-field">
+                                <label>{input.name}</label>
+                                <div className="label-value">{input.value}</div>
+                            </div>
+                        )
                     }
                 })
             }
@@ -112,10 +104,10 @@ export const FormGenerator = ({
                 ? <></>
                 : <button
                       type='submit'
-                      disabled={ info.allowButtonAction }
-                      className={ info.allowButtonAction === false ? "button-disabled" : "" }
+                      disabled={!info.allowButtonAction}
+                      className={!info.allowButtonAction ? "button-disabled" : ""}
                   >
-                      { info.button_value }
+                      {info.button_value}
                   </button>
             }
 
@@ -156,6 +148,7 @@ const TextInputGenerator = ({
         } else {
             setTextInputValidationInfo("Success")
         }
+        input.validationInfo = textInputValidationInfo
     }
 
     return (
@@ -167,12 +160,13 @@ const TextInputGenerator = ({
                 id={input.name + info.action + info.endpoint + 'Input'}
                 autoComplete='off'
                 ref={input.ref}
-                onChange={ input.onChange === null ? defaultValidation : input.onChange}
+                onChange={input.onChange === null ? defaultValidation : input.onChange}
                 className={
                     [ "Empty", "Success"].includes(
                         input.validationInfo === null ? textInputValidationInfo : input.validationInfo
                     ) ? "" : "input-incorrect"
                 }
+                placeholder={input.placeholder === null ? "" : input.placeholder}
             />
             <div
                 className="popup"
@@ -238,7 +232,6 @@ const PasswordInputGenerator = ({
                 <div className="popup-content">
                     { input.validationInfo }
                 </div>
-
             </div>
         </div>
     )
@@ -465,7 +458,6 @@ const UploadInputGenerator = ({
     const onLoadFile = async (event) => {
         event.preventDefault()
         let data = event.target.files[0]
-        // input.setFile(await toBase64(data))
         input.setFile( data )
         setDropInfos(data.name, data.size)
     }
@@ -474,7 +466,6 @@ const UploadInputGenerator = ({
         event.preventDefault()
         event.persist()
         let data = event.dataTransfer.files[0]
-        // input.setFile(await toBase64(data))
         input.setFile( data )
         setDropInfos(data.name, data.size)
     }

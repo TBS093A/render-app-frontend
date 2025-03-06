@@ -1,152 +1,161 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, createRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { navigate } from 'gatsby';
+import { registerUser } from '../../../redux/asyncThunks/userAuthAsyncThunk';
+import { selectAuthError, selectAuthLoading } from '../../../redux/slices/userAuthSlice';
+import FormGenerator from '../formGenerator';
 
-// import { useSelector, useDispatch } from 'react-redux'
+const UserRegister = () => {
+    const dispatch = useDispatch();
+    const error = useSelector(selectAuthError);
+    const loading = useSelector(selectAuthLoading);
+    const [infoMessage, setInfoMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
-// import { userCrudSelector } from '../../../redux/slices/userCrudSlice'
-// import userCrudAsyncThunk from '../../../redux/asyncThunks/userCrudAsyncThunk'
+    const usernameInput = createRef();
+    const emailInput = createRef();
+    const passwordInput = createRef();
+    const confirmPasswordInput = createRef();
 
-import FormGenerator from '../formGenerator'
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,24}$/;
 
+    const [usernameValidationInfo, setUsernameValidationInfo] = useState("Empty");
+    const [emailValidationInfo, setEmailValidationInfo] = useState("Empty");
+    const [passwordValidationInfo, setPasswordValidationInfo] = useState("Empty");
+    const [confirmPasswordValidationInfo, setConfirmPasswordValidationInfo] = useState("Empty");
 
-const UserRegisterForm = () => {
-
-    const usernameInput = React.createRef()
-    const passwordInput = React.createRef()
-    const confirmPasswordInput = React.createRef()
-
-    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-
-    const [usernameValidationInfo, setUsernameValidationInfo] = useState("Empty")
-    const [passwordValidationInfo, setPasswordValidationInfo] = useState("Empty")
-    const [confirmPasswordValidationInfo, setConfirmPasswordValidationInfo] = useState("Empty")
-
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
-
-    const [allowButtonAction, setAllowButtonAction] = useState(false)
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [allowButtonAction, setAllowButtonAction] = useState(false);
 
     const usernameValidation = (event) => {
         if (event.target.value === "") {
-            setUsernameValidationInfo("Email is required.")
-        } else if(!emailRegex.test(event.target.value)) {
-            setUsernameValidationInfo("Please provide correct email")
+            setUsernameValidationInfo("Login jest wymagany");
         } else {
-            setUsernameValidationInfo("Success")
+            setUsernameValidationInfo("Success");
         }
-    }
+    };
+
+    const emailValidation = (event) => {
+        if (event.target.value === "") {
+            setEmailValidationInfo("Email jest wymagany");
+        } else if (!emailRegex.test(event.target.value)) {
+            setEmailValidationInfo("Nieprawidłowy format emaila");
+        } else {
+            setEmailValidationInfo("Success");
+        }
+    };
 
     const passwordValidation = (event) => {
-
-        setPassword(event.target.value)
+        setPassword(event.target.value);
 
         if (event.target.value === "") {
-            setPasswordValidationInfo("Password is required.")
-        } else if(!passwordRegex.test(event.target.value)) {
-            setPasswordValidationInfo("Password require:\n - At least 8 characters,\n - At least one uppercase letter,\n - At least one lowercase letter,\n - At least one digit,\n - At least one special character.")
+            setPasswordValidationInfo("Hasło jest wymagane");
+        } else if (!passwordRegex.test(event.target.value)) {
+            setPasswordValidationInfo("Hasło musi zawierać:\n - Minimum 8 znaków\n - Maksimum 24 znaki\n - Minimum jedną wielką literę\n - Minimum jedną małą literę\n - Minimum jedną cyfrę\n - Minimum jeden znak specjalny");
         } else {
-            setPasswordValidationInfo("Success")
+            setPasswordValidationInfo("Success");
         }
 
-        if(event.target.value !== confirmPassword) {
-            setConfirmPasswordValidationInfo("Passwords are different.")
+        if (event.target.value !== confirmPassword) {
+            setConfirmPasswordValidationInfo("Hasła nie są identyczne");
         } else {
-            setConfirmPasswordValidationInfo("Success")
+            setConfirmPasswordValidationInfo("Success");
         }
-    }
+    };
 
     const confirmPasswordValidation = (event) => {
+        setConfirmPassword(event.target.value);
 
-        setConfirmPassword(event.target.value)
-
-        if(event.target.value !== password) {
-            setConfirmPasswordValidationInfo("Passwords are different.")
+        if (event.target.value !== password) {
+            setConfirmPasswordValidationInfo("Hasła nie są identyczne");
         } else {
-            setConfirmPasswordValidationInfo("Success")
+            setConfirmPasswordValidationInfo("Success");
         }
-    }
+    };
 
     useEffect(() => {
-            setAllowButtonAction(
-                usernameValidationInfo === "Success"
-                && passwordValidationInfo === "Success"
-                && confirmPasswordValidationInfo === "Success"
-            )
-        }, [
-            allowButtonAction,
-            usernameValidationInfo,
-            passwordValidationInfo,
-            confirmPasswordValidationInfo
-        ]
-    )
+        setAllowButtonAction(
+            usernameValidationInfo === "Success" &&
+            emailValidationInfo === "Success" &&
+            passwordValidationInfo === "Success" &&
+            confirmPasswordValidationInfo === "Success"
+        );
+    }, [
+        usernameValidationInfo,
+        emailValidationInfo,
+        passwordValidationInfo,
+        confirmPasswordValidationInfo
+    ]);
 
 
-    // const dispatch = useDispatch()
-    // const { info } = useSelector( userCrudSelector )
-    const info = "" // if redux is integrated - delete this line
-
-    let refList = [
-        usernameInput,
-        passwordInput,
-        confirmPasswordInput
-    ]
-
-    let inputList = [
+    const inputList = [
         {
             type: 'info',
-            action: 'Create',
-            endpint: 'user/auth/register',
-            button_value: 'SIGN UP',
+            action: 'Register',
+            endpoint: 'auth',
+            button_value: loading ? 'REJESTRACJA...' : 'ZAREJESTRUJ',
             allowButtonAction: allowButtonAction
         },
         {
             type: 'text',
-            name: 'EMAIL',
+            name: 'LOGIN',
             ref: usernameInput,
             onChange: usernameValidation,
             validationInfo: usernameValidationInfo
         },
         {
+            type: 'text',
+            name: 'EMAIL',
+            ref: emailInput,
+            onChange: emailValidation,
+            validationInfo: emailValidationInfo
+        },
+        {
             type: 'password',
-            name: 'PASSWORD',
+            name: 'HASŁO',
             ref: passwordInput,
             onChange: passwordValidation,
             validationInfo: passwordValidationInfo
         },
         {
             type: 'password',
-            name: 'CONFIRM PASSWORD',
+            name: 'POTWIERDŹ HASŁO',
             ref: confirmPasswordInput,
             onChange: confirmPasswordValidation,
             validationInfo: confirmPasswordValidationInfo
         }
-    ]
+    ];
 
-    const register = async ( refs ) => {
-        let pass = {
-            username: refs[0].current.value,
-            password: refs[1].current.value
+    const register = async (formData) => {
+        try {
+            const userData = {
+                username: formData.LOGIN,
+                email: formData.EMAIL,
+                password: formData.HASŁO
+            };
+
+            await dispatch(registerUser(userData)).unwrap();
+            setInfoMessage("Rejestracja zakończona sukcesem!");
+            navigate('/dashboard');
+        } catch (error) {
+            setErrorMessage("Wystąpił błąd podczas rejestracji (" + error.massage + ")");
         }
-        // dispatch(
-        //     userCrudAsyncThunk.fetchRegister(
-        //         pass
-        //     )
-        // )
-    }
+    };
 
     return (
-        <div>
+        <div className='form-container'>
             <FormGenerator
-                inputList={ inputList }
-                refList={ refList }
-                action={ register }
+                inputList={inputList}
+                action={register}
             />
             <div className='form_info'>
-                { info }
+                {infoMessage && <div className="success-message">{infoMessage}</div>}
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
             </div>
         </div>
-    )
+    );
+};
 
-}
-
-export default UserRegisterForm
+export default UserRegister;

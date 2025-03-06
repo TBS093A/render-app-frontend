@@ -1,72 +1,54 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginUser, registerUser, changePassword } from '../asyncThunks/userAuthAsyncThunk';
+import { cookieService } from '../../services/cookieService';
 
 const initialState = {
-    user: null,
-    token: null,
-    isLoading: false,
-    error: null
+    user: cookieService.getUserData() || null,
+    token: cookieService.getToken() || null,
+    isAuthenticated: !!cookieService.getToken(),
+    loading: false,
+    error: null,
+    permissions: []
 };
 
 const userAuthSlice = createSlice({
     name: 'userAuth',
     initialState,
     reducers: {
+        setCredentials: (state, { payload }) => {
+            const { user, token, permissions } = payload;
+            state.user = user;
+            state.token = token;
+            state.isAuthenticated = true;
+            state.permissions = permissions;
+            cookieService.setToken(token);
+            cookieService.setUserData({ ...user, permissions });
+        },
         logout: (state) => {
             state.user = null;
             state.token = null;
-            state.error = null;
+            state.isAuthenticated = false;
+            state.permissions = [];
+            cookieService.clearAll();
+        },
+        setLoading: (state, { payload }) => {
+            state.loading = payload;
+        },
+        setError: (state, { payload }) => {
+            state.error = payload;
         },
         clearError: (state) => {
             state.error = null;
         }
-    },
-    extraReducers: (builder) => {
-        // Login
-        builder.addCase(loginUser.pending, (state) => {
-            state.isLoading = true;
-            state.error = null;
-        });
-        builder.addCase(loginUser.fulfilled, (state, action) => {
-            state.isLoading = false;
-            state.user = action.payload.user;
-            state.token = action.payload.token;
-        });
-        builder.addCase(loginUser.rejected, (state, action) => {
-            state.isLoading = false;
-            state.error = action.error.message;
-        });
-
-        // Register
-        builder.addCase(registerUser.pending, (state) => {
-            state.isLoading = true;
-            state.error = null;
-        });
-        builder.addCase(registerUser.fulfilled, (state, action) => {
-            state.isLoading = false;
-            state.user = action.payload.user;
-            state.token = action.payload.token;
-        });
-        builder.addCase(registerUser.rejected, (state, action) => {
-            state.isLoading = false;
-            state.error = action.error.message;
-        });
-
-        // Change Password
-        builder.addCase(changePassword.pending, (state) => {
-            state.isLoading = true;
-            state.error = null;
-        });
-        builder.addCase(changePassword.fulfilled, (state) => {
-            state.isLoading = false;
-        });
-        builder.addCase(changePassword.rejected, (state, action) => {
-            state.isLoading = false;
-            state.error = action.error.message;
-        });
     }
 });
 
-export const { logout, clearError } = userAuthSlice.actions;
-export const userAuthSelector = (state) => state.userAuth;
+export const { setCredentials, logout, setLoading, setError, clearError } = userAuthSlice.actions;
+
+export const selectCurrentUser = (state) => state.userAuth.user;
+export const selectCurrentToken = (state) => state.userAuth.token;
+export const selectIsAuthenticated = (state) => state.userAuth.isAuthenticated;
+export const selectUserPermissions = (state) => state.userAuth.permissions;
+export const selectAuthLoading = (state) => state.userAuth.loading;
+export const selectAuthError = (state) => state.userAuth.error;
+
 export default userAuthSlice.reducer; 

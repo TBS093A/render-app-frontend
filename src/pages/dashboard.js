@@ -1,20 +1,35 @@
-import React, { useState } from 'react';
-import '../styles/general.scss';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { navigate } from 'gatsby';
+import { logoutUser, checkAuth } from '../redux/asyncThunks/userAuthAsyncThunk';
+import { selectIsAuthenticated, selectUserPermissions } from '../redux/slices/userAuthSlice';
 
-import FootComponent from '../components/foot.js';
 import NavBarComponent from '../components/navbar.js';
-
-import ThreeDModelsDashboard from './dashboards/3d-models.js';
+import FootComponent from '../components/foot.js';
 import AIModelsDashboard from './dashboards/ai.models.js';
 import AITasksDashboard from './dashboards/ai.tasks.js';
 import RendersDashboard from './dashboards/renders.js';
 import ServersDashboard from './dashboards/servers.js';
-import UserSettings from './dashboards/user.js';
+import UserSettingsDashboard from './dashboards/user.js';
+import ThreeDModelsDashboard from './dashboards/3d-models.js';
 
 const DashboardPage = () => {
+    const dispatch = useDispatch();
+    const isAuthenticated = useSelector(selectIsAuthenticated);
+    const permissions = useSelector(selectUserPermissions);
+    
     const icons_size = "fa-2x";
     const [activeComponent, setActiveComponent] = useState('3d-models');
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            dispatch(checkAuth())
+                .unwrap()
+                .catch(() => {
+                    navigate('/auth/login');
+                });
+        }
+    }, [dispatch, isAuthenticated]);
 
     const handleNavigation = (path) => {
         setActiveComponent(path);
@@ -24,10 +39,13 @@ const DashboardPage = () => {
         return activeComponent === path;
     };
 
-    const handleLogout = () => {
-        // TODO: Implement proper logout logic (clear tokens, session, etc.)
-        console.log('Logging out...');
-        window.location.href = '/login';
+    const handleLogout = async () => {
+        try {
+            await dispatch(logoutUser()).unwrap();
+            navigate('/auth/login');
+        } catch (error) {
+            console.error('Błąd podczas wylogowywania:', error);
+        }
     };
 
     const renderContent = () => {
@@ -41,7 +59,7 @@ const DashboardPage = () => {
             case 'servers':
                 return <ServersDashboard />;
             case 'settings':
-                return <UserSettings />;
+                return <UserSettingsDashboard />;
             case '3d-models':
             default:
                 return <ThreeDModelsDashboard />;

@@ -1,121 +1,106 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, createRef, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { navigate } from 'gatsby';
+import { loginUser } from '../../../redux/asyncThunks/userAuthAsyncThunk';
+import { selectAuthError, selectAuthLoading, setError } from '../../../redux/slices/userAuthSlice';
+import FormGenerator from '../formGenerator';
 
-// import { useSelector, useDispatch } from 'react-redux'
+const UserLogin = () => {
+    const dispatch = useDispatch();
+    const error = useSelector(selectAuthError);
+    const loading = useSelector(selectAuthLoading);
+    const [infoMessage, setInfoMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
-// import { userAuthSelector } from '../../../redux/slices/userAuthSlice'
-// import userAuthAsyncThunk from '../../../redux/asyncThunks/userAuthAsyncThunk'
+    const usernameInput = createRef();
+    const passwordInput = createRef();
 
-import FormGenerator from '../formGenerator'
+    const [usernameValidationInfo, setUsernameValidationInfo] = useState("Empty");
+    const [passwordValidationInfo, setPasswordValidationInfo] = useState("Empty");
 
+    const [allowButtonAction, setAllowButtonAction] = useState(false);
 
-const UserLoginForm = () => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,24}$/;
 
-    const usernameInput = React.createRef()
-    const passwordInput = React.createRef()
-
-    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-    
-    const [usernameValidationInfo, setUsernameValidationInfo] = useState("Empty")
-    const [passwordValidationInfo, setPasswordValidationInfo] = useState("Empty")
-    
-    const [password, setPassword] = useState("")
-    
-    const [allowButtonAction, setAllowButtonAction] = useState(false)
-    
     const usernameValidation = (event) => {
-        
         if (event.target.value === "") {
-            setUsernameValidationInfo("Email is required.")
-        } else if(!emailRegex.test(event.target.value)) {
-            setUsernameValidationInfo("Please provide correct email")
+            setUsernameValidationInfo("Login jest wymagany");
         } else {
-            setUsernameValidationInfo("Success")
+            setUsernameValidationInfo("Success");
         }
-    }
-    
+    };
+
     const passwordValidation = (event) => {
-    
-        setPassword(event.target.value)
-
         if (event.target.value === "") {
-            setPasswordValidationInfo("Password is required.")
-        } else if(!passwordRegex.test(event.target.value)) {
-            setPasswordValidationInfo("Password require:\n - At least 8 characters,\n - At least one uppercase letter,\n - At least one lowercase letter,\n - At least one digit,\n - At least one special character.")
+            setPasswordValidationInfo("Hasło jest wymagane");
+        } else if (!passwordRegex.test(event.target.value)) {
+            setPasswordValidationInfo("Hasło nie spełnia wymagań tej witryny");
         } else {
-            setPasswordValidationInfo("Success")
+            setPasswordValidationInfo("Success");
         }
-    }
-    
+    };
+
     useEffect(() => {
-            setAllowButtonAction(
-                usernameValidationInfo === "Success"
-                && passwordValidationInfo === "Success"
-            )
-        }, [
-            allowButtonAction,
-            usernameValidationInfo,
-            passwordValidationInfo
-        ]
-    )
-    
-    // const dispatch = useDispatch()
-    // const { info } = useSelector( userAuthSelector )
-    const info = "" // if redux is integrated - delete this line
+        setAllowButtonAction(
+            usernameValidationInfo === "Success" &&
+            passwordValidationInfo === "Success"
+        );
+    }, [
+        usernameValidationInfo,
+        passwordValidationInfo,
+    ]);
 
-    let refList = [
-        usernameInput,
-        passwordInput
-    ]
-
-    let inputList = [
+    const inputList = [
         {
             type: 'info',
-            action: 'Create',
-            endpint: 'user/auth',
-            button_value: 'SIGN IN'
+            action: 'Login',
+            endpoint: 'auth',
+            button_value: loading ? 'LOGOWANIE...' : 'ZALOGUJ',
+            allowButtonAction: allowButtonAction
         },
         {
             type: 'text',
-            name: 'EMAIL',
+            name: 'LOGIN',
             ref: usernameInput,
             onChange: usernameValidation,
             validationInfo: usernameValidationInfo
         },
         {
             type: 'password',
-            name: 'PASSWORD',
+            name: 'HASŁO',
             ref: passwordInput,
             onChange: passwordValidation,
             validationInfo: passwordValidationInfo
         }
-    ]
+    ];
 
-    const login = async ( refs ) => {
-        let pass = {
-            username: refs[0].current.value,
-            password: refs[1].current.value
+    const login = async (formData) => {
+        try {
+            const credentials = {
+                username: formData.LOGIN,
+                password: formData.HASŁO
+            };
+
+            await dispatch(loginUser(credentials)).unwrap();
+            setInfoMessage("Logowanie zakończone sukcesem!");
+            navigate('/dashboard');
+        } catch (error) {
+            setErrorMessage("Wystąpił błąd podczas logowania (" + error.message + ")");
         }
-        // dispatch(
-        //     userAuthAsyncThunk.fetchLogin(
-        //         pass
-        //     )
-        // )
-    }
+    };
 
     return (
-        <div>
+        <div className='form-container'>
             <FormGenerator
-                inputList={ inputList }
-                refList={ refList }
-                action={ login }
+                inputList={inputList}
+                action={login}
             />
             <div className='form_info'>
-                { info }
+                {infoMessage && <div className="success-message">{infoMessage}</div>}
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
             </div>
         </div>
-    )
+    );
+};
 
-}
-
-export default UserLoginForm
+export default UserLogin;
